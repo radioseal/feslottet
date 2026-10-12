@@ -1,0 +1,82 @@
+{
+ "": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "-8%",
+  "pitch": "+0Hz"
+ },
+ "konge": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "-10%",
+  "pitch": "-10Hz"
+ },
+ "tor": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "-6%",
+  "pitch": "+6Hz"
+ },
+ "per": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "+2%",
+  "pitch": "+14Hz"
+ },
+ "rolf": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "-12%",
+  "pitch": "-18Hz"
+ },
+ "vm": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "-4%",
+  "pitch": "-4Hz"
+ },
+ "dronning": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "-10%",
+  "pitch": "-12Hz"
+ },
+ "siv": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "-2%",
+  "pitch": "+10Hz"
+ },
+ "vk": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "+0%",
+  "pitch": "+5Hz"
+ },
+ "kokk": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "-4%",
+  "pitch": "-22Hz"
+ },
+ "mia": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "+4%",
+  "pitch": "+35Hz"
+ },
+ "barn": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "+8%",
+  "pitch": "+48Hz"
+ },
+ "rk1": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "-8%",
+  "pitch": "-20Hz"
+ },
+ "rk2": {
+  "voice": "nb-NO-FinnNeural",
+  "rate": "-2%",
+  "pitch": "+8Hz"
+ },
+ "rd1": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "-6%",
+  "pitch": "-6Hz"
+ },
+ "rd2": {
+  "voice": "nb-NO-PernilleNeural",
+  "rate": "-2%",
+  "pitch": "+16Hz"
+ }
+}

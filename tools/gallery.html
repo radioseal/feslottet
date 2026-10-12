@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Feslottet gallery</title>
+<link rel="stylesheet" href="../css/font_andika.css">
+<style>body{margin:0;background:#eef4fa;font-family:Andika,system-ui,sans-serif}#g{display:grid;grid-template-columns:repeat(auto-fill,180px);gap:6px;padding:6px}
+.c{background:#fff;border-radius:10px;text-align:center;font-size:13px;padding:2px;line-height:1.15}.c img{width:176px;height:150px;display:block}.c b{font-size:14px}.c i{color:#8a7fb0;font-style:normal}
+.c.err{background:#ffe0e4}</style></head>
+<body><div id="g"></div>
+<script src="../js/three.min.js"></script>
+<script src="../js/core/00_core.js"></script><script src="../js/core/models.js"></script><script src="../js/core/vox.js"></script>
+<script>
+// Usage: gallery.html#files=models/m_food.js,models/m_animals.js&filter=kake&style=crystal&styles=1&variants=1&angle=0.6
+//   files    js files (relative to js/) to load; default window.GALLERY_FILES
+//   filter   only ids containing this text (comma list allowed)
+//   style    render every model in this style;  styles=1 → each model in plain + all 4 fairy styles (castable review)
+//   variants=1 → every combination of meta.variants
+window.F.save = { settings: {} }; window.F.store = () => {};
+window.F.Space = { scene: () => null }; window.F.R = { cam: { yaw: 0 } };
+const H = location.hash.slice(1), Q = Object.fromEntries(H.split('&').filter(Boolean).map(kv => kv.split('=')));
+const files = (Q.files ? decodeURIComponent(Q.files).split(',') : (window.GALLERY_FILES || []));
+let loaded = 0;
+function go() {
+  const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); r.setSize(352, 300); r.setClearColor(0xdfeefa);
+  r.shadowMap.enabled = false;
+  const s = new THREE.Scene(); s.add(new THREE.HemisphereLight(0xeaf4ff, 0x9bbf86, 0.72)); const d = new THREE.DirectionalLight(0xfff0d8, 0.8); d.position.set(3, 6, 4); s.add(d);
+  const cam = new THREE.PerspectiveCamera(30, 352 / 300, 0.01, 400);
+  const filt = Q.filter ? decodeURIComponent(Q.filter).split(',') : null;
+  const ids = Object.keys(F.VOX.defs).filter(id => !filt || filt.some(f => id.includes(f))).sort();
+  const styles = Q.styles ? [null, 'crystal', 'flower', 'bubble', 'star'] : [Q.style || null];
+  const g = document.getElementById('g');
+  let n = 0, errs = 0;
+  for (const id of ids) {
+    const vars = Q.variants ? F.VOX.variants(id) : [{}];
+    vars.forEach((vo, vi) => styles.forEach(st => {
+      const div = document.createElement('div'); div.className = 'c';
+      let obj;
+      try { obj = F.VOX.make(id, Object.assign({}, vo, st ? { style: st, keepBubble: true } : {})); }
+      catch (e) { console.error(id, e); div.className = 'c err'; div.textContent = id + ' ERROR ' + e.message; g.appendChild(div); errs++; return; }
+      s.add(obj);
+      const box = F.VOX.bbox(obj), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+      const R = Math.max(size.x, size.y, size.z) * 1.6 + 0.05, a = +(Q.angle || 0.6);
+      cam.position.set(c.x + Math.sin(a) * R, c.y + R * 0.55, c.z + Math.cos(a) * R); cam.lookAt(c);
+      obj.traverse(o => { if (o.isSprite && o.userData.tw) o.scale.setScalar(o.userData.s * 0.8); });
+      r.render(s, cam);
+      const img = new Image(); img.src = r.domElement.toDataURL(); div.appendChild(img);
+      const def = F.VOX.defs[id];
+      const b = document.createElement('b'); b.textContent = id; div.appendChild(b);
+      const extra = (st ? ' ' + st : '') + (Object.keys(vo).length ? ' ' + JSON.stringify(vo).replace(/["{}]/g, '') : '');
+      const i = document.createElement('i'); i.textContent = extra + ' ' + def.size.join('×') + ' @' + (+def.scale).toFixed(3); div.appendChild(document.createElement('br')); div.appendChild(i);
+      g.appendChild(div); s.remove(obj); n++;
+    }));
+  }
+  document.title = 'done ' + n; window.GALLERY_DONE = n; window.GALLERY_ERRORS = errs;
+}
+if (!files.length) go();
+files.forEach(f => { const sc = document.createElement('script'); sc.src = '../js/' + f; sc.onload = sc.onerror = () => { if (++loaded === files.length) go(); }; document.body.appendChild(sc); });
+</script></body></html>

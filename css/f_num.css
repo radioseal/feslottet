@@ -1,0 +1,79 @@
+/* Feslottet – number task formats (WP FORMATS-N): task tray, chips, keypad, action buttons, board plaques */
+.nrow { display: flex; gap: 18px; align-items: center; justify-content: center; }
+.nrow.locked { pointer-events: none; opacity: .72; }
+
+/* F01: the chips are round brass lift buttons */
+.chips.nlift .chip { width: var(--chip); min-width: var(--chip); padding: 0; border-radius: 50%; color: #4a3410;
+  background: radial-gradient(circle at 35% 30%, #fffbe6, #ffd95c 55%, #e3a91d); border-color: #c98f10; }
+.chips.nlift .chip.right { background: radial-gradient(circle at 35% 30%, #ffffff, #b6f5cf 60%, #3fbf72); border-color: var(--ok); }
+.chips.nlift .chip.wrong { background: radial-gradient(circle at 35% 30%, #fff, #ffd0d8 60%, #ef5b6a); }
+
+/* action buttons (+10 / +1 / ✓ / purse) with real rendered voxel thumbnails */
+.nact { min-width: 150px; height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px 16px; gap: 0; touch-action: manipulation; }
+.nact .nthumb { width: 96px; height: 96px; pointer-events: none; display: block; }
+.nact .nact-l { font-size: 34px; line-height: 1; margin-top: -4px; }
+.nact.okbtn { font-size: 70px; min-width: 140px; width: auto; height: 140px; border-radius: 22px; color: #7a5300; }
+.nact.dim { opacity: .45; }
+.nact.nbump { animation: pop .3s; }
+.nact.glow { animation: glowp .9s ease-in-out infinite alternate; border-color: var(--gold2); }
+.nact.big1 { min-width: 170px; }
+.nact.purse .nthumb { width: 116px; height: 116px; }
+
+/* number strip 10–20 (support level 0): separate tiles at the top centre */
+.nstrip { position: fixed; left: 14px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column-reverse; gap: 7px; z-index: 29; pointer-events: none; }
+.nstile { min-width: 58px; padding: 0 8px; font-size: 27px; line-height: 1.3; font-weight: 700; text-align: center; background: rgba(255, 255, 255, .92); border: 2px solid var(--line); border-radius: 12px; color: var(--ink2); transition: transform .15s, background .15s; }
+.nstile.on { background: #fff3b0; border-color: var(--gold); color: var(--ink); transform: scale(1.25) translateX(6px); }
+
+/* plaques pinned to things on the floating board */
+#nlabels { position: fixed; inset: 0; pointer-events: none; z-index: 14; }
+.nlabel { position: absolute; left: 0; top: 0; font-weight: 700; color: var(--ink); background: #fffbe8; border: 3px solid var(--gold); border-radius: 14px; padding: 0 14px;
+  font-size: 36px; line-height: 1.25; box-shadow: 0 3px 0 rgba(60, 40, 110, .18), 0 4px 12px rgba(60, 40, 110, .18); white-space: nowrap; will-change: transform; text-align: center; min-width: 44px; }
+.nlabel.click { pointer-events: auto; cursor: pointer; }
+.nlabel.small { font-size: 26px; padding: 0 10px; }
+.nlabel.ten { background: #e8f7ff; border-color: #7cc4f5; }
+.nlabel.big { font-size: 48px; padding: 0 18px; }
+.nlabel.goal { font-size: 56px; background: #fff; border-color: var(--pink); border-width: 4px; padding: 0 18px; }
+.nlabel.price { font-size: 42px; background: #fff; border-color: var(--gold2); }
+.nlabel.plaque { font-size: 36px; background: #fff6e8; border-color: #e8cfa0; }
+.nlabel.plate { font-size: 40px; min-width: 52px; background: #5a6aa8; color: #fff; border-color: #fff; }
+.nlabel.stone { font-size: 34px; background: #fff; border-color: #c9bca4; }
+.nlabel.floor { font-size: 28px; min-width: 60px; background: #3b2f5c; color: #ffe27a; border-color: #6b5d8f; }
+.nlabel.floor.lit { color: #fff; background: #5a6aa8; }
+.nlabel.blank { background: #fff; border-style: dashed; border-color: var(--lilac); color: var(--lilac); animation: npulse .8s ease-in-out infinite alternate; }
+.nlabel.pulse { animation: npulse .5s ease-in-out infinite alternate; }
+.nlabel.chalk { background: transparent; border: none; box-shadow: none; color: #fffef0; font-size: 72px; text-shadow: 0 0 6px rgba(255,255,255,.35); }
+.nlabel.word.bottle { font-size: 40px; background: #fffdf2; border: 2px dashed #e0c890; }
+.nlabel.done { opacity: .55; }
+.nlabel.hintn { background: #fff; border-color: var(--lilac); }
+.nlabel.wrong { background: #ffe0e4 !important; border-color: var(--red) !important; color: var(--ink) !important; }
+@keyframes npulse { from { box-shadow: 0 0 0 0 rgba(183, 156, 255, .5), 0 3px 0 rgba(60, 40, 110, .18); } to { box-shadow: 0 0 0 10px rgba(183, 156, 255, .15), 0 3px 0 rgba(60, 40, 110, .18); } }
+
+@media (max-height: 720px) {
+  .nact { height: 122px; min-width: 132px; }
+  .nact .nthumb { width: 80px; height: 80px; }
+  .nact.okbtn { height: 122px; }
+  .nlabel { font-size: 32px; }
+  .nlabel.goal { font-size: 48px; }
+  .nstile { font-size: 22px; min-width: 48px; }
+  .nstrip { gap: 5px; }
+}
+
+/* F02 in a real village: the houses in play get big tappable gold plates; the solution plate glows */
+.nlabel.vdoor { font-size: 40px; background: #fffbe8; border-color: var(--gold); border-width: 4px; padding: 2px 16px; box-shadow: 0 0 0 4px rgba(255, 255, 255, .7), 0 4px 14px rgba(60, 40, 110, .25); }
+.nlabel.vdoor.click:hover { transform-origin: center; filter: brightness(1.05); }
+.nlabel.sol { background: #fff3b0 !important; border-color: var(--gold2) !important; animation: nsol .55s ease-in-out infinite alternate; }
+@keyframes nsol { from { box-shadow: 0 0 0 0 rgba(255, 214, 80, .9), 0 3px 0 rgba(60, 40, 110, .18); } to { box-shadow: 0 0 0 16px rgba(255, 214, 80, .15), 0 3px 0 rgba(60, 40, 110, .18); } }
+/* F22 O1–O2: the guessed number on the '?' stone (someone else's guess – lilac, handwritten feel) */
+.nlabel.guess { background: #f3ecff; border-color: var(--lilac); border-style: dashed; color: #5b3fa0; }
+
+/* N9 «tidsboblen»: a soap bubble that slowly fills – no numbers, no countdown, no red. Bottom centre (the empty tray spot). */
+.ntime { position: fixed; left: 50%; bottom: 26px; margin-left: -46px; width: 92px; height: 92px; border-radius: 50%; overflow: hidden; z-index: 15; pointer-events: none;
+  border: 3px solid rgba(255, 255, 255, .95);
+  background: radial-gradient(circle at 50% 55%, rgba(255, 255, 255, .25), rgba(200, 225, 255, .45) 60%, rgba(255, 190, 240, .6) 85%, rgba(190, 255, 235, .75));
+  box-shadow: 0 0 16px rgba(160, 200, 255, .6), inset 0 0 12px rgba(255, 255, 255, .8); transition: scale .45s ease-out, opacity .45s; animation: nbob 2.4s ease-in-out infinite alternate; }
+@keyframes nbob { from { translate: 0 0; } to { translate: 0 -8px; } }
+.ntime-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(180deg, rgba(196, 170, 255, .8), rgba(150, 205, 255, .85)); transition: height .2s linear; }
+.ntime-shine { position: absolute; left: 20px; top: 14px; width: 24px; height: 15px; border-radius: 50%; background: rgba(255, 255, 255, .92); transform: rotate(-30deg); }
+.ntime.late { box-shadow: 0 0 22px rgba(255, 210, 120, .8), inset 0 0 12px rgba(255, 255, 255, .8); }
+.ntime.pop { opacity: 0; scale: 1.7; }
+.ntime.won { box-shadow: 0 0 30px rgba(255, 230, 120, 1); }

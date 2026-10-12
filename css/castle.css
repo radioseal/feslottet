@@ -1,0 +1,42 @@
+/* Feslottet – castle + park UI (lift panel, overview close, plot chooser) */
+.lift-wrap .panel { padding: 30px 34px 26px; background: linear-gradient(#fffaf3, #fff1e0); }
+.liftpanel { display: flex; flex-direction: column; gap: 20px; align-items: center; padding: 6px 30px 0; }
+.lift-row { display: flex; gap: 20px; justify-content: center; }
+.kbtn.liftbtn { width: 104px; height: 104px; min-width: 104px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #fffdf0, #ffe9a8 70%, #f5c542); border: 4px solid #e0a91e; }
+.kbtn.liftbtn .ln { font-size: 52px; font-weight: 700; line-height: 1; color: var(--ink); }
+.kbtn.ov-close { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 30; width: 72px; height: 72px; min-width: 72px; padding: 0; border-radius: 50%; font-size: 30px; }
+.plotpanel { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; max-width: 900px; padding: 10px 40px 0 10px; }
+.plotpanel .kbtn { width: 140px; height: 150px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.plotpanel .kbtn img { width: 110px; height: 110px; }
+.plotpanel .kbtn.empty { font-size: 44px; }
+.wlabel.k-num.stone { background: #fff6dc; border-color: #e0a91e; font-size: 30px; }
+.wlabel.k-plaque.shop { background: #fffdf6; border: 3px solid #ffb3d1; font-size: 26px; }
+.wlabel.k-plaque.ov { font-size: 17px; padding: 1px 9px; }
+.wlabel.k-num.ov { font-size: 34px; min-width: 60px; }
+.wlabel.glow { background: #fff3b0; border-color: #f5c542; box-shadow: 0 0 0 6px rgba(245,197,66,.45), 0 3px 0 rgba(60,40,110,.18); }
+
+/* WP1 BLD: lift rows grouped by floor (top floor first) */
+.liftpanel { gap: 16px; }
+.liftpanel .lift-row + .lift-row { border-top: 3px dashed #f0d58a; padding-top: 16px; }
+/* WP1 BLD: the indoor map (parchment plan, floor tabs, room tiles) */
+.bldmap-wrap .panel { padding: 22px 26px 24px; background: linear-gradient(#fbf1d6, #f3e2b6); border: 5px solid #d9b86a; box-shadow: inset 0 0 0 3px #fff6dc, 0 10px 30px rgba(60,40,110,.25); }
+.bldmap { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 4px 34px 0 8px; }
+.bm-head { display: flex; align-items: center; gap: 14px; }
+.bm-title { font-size: 34px; font-weight: 700; color: #7a4d1c; letter-spacing: .02em; }
+.bm-tabs { display: flex; gap: 18px; }
+.kbtn.bm-tab { width: 96px; height: 96px; min-width: 96px; padding: 0; border-radius: 22px; background: #fff8e6; border: 4px solid #e0c27a; }
+.kbtn.bm-tab .bm-tabn { font-size: 48px; font-weight: 700; color: #7a4d1c; }
+.kbtn.bm-tab.on { background: radial-gradient(circle at 35% 30%, #fffdf0, #ffe9a8 70%, #f5c542); border-color: #e0a91e; }
+.kbtn.bm-tab.here { box-shadow: 0 0 0 6px rgba(198,168,255,.55); }
+.bm-row { display: flex; gap: 12px; flex-wrap: nowrap; }
+.kbtn.bm-room { position: relative; width: 150px; height: 168px; min-width: 120px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px;
+  background: #fffdf6; border: 4px solid #e8cf92; border-radius: 18px; }
+.kbtn.bm-room.here { border-color: #b79cff; background: #f6f0ff; }
+.bm-num { font-size: 50px; font-weight: 700; line-height: 1; color: var(--ink); min-height: 50px; }
+.bm-name { font-size: 18px; line-height: 1.1; text-align: center; color: #5a4a7a; }
+.bm-icons { display: flex; gap: 4px; margin-top: auto; }
+.bm-ico { width: 36px; height: 36px; }
+.bm-here { position: absolute; top: -26px; right: -14px; }
+.bm-fe { width: 54px; height: 54px; filter: drop-shadow(0 2px 2px rgba(60,40,110,.3)); animation: bmBob 1.4s ease-in-out infinite; }
+@keyframes bmBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }

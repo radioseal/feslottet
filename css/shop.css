@@ -1,0 +1,232 @@
+/* Feslottet – LIFE styles: shops, talk / pocket-money panel, coins, wish bubbles, envelopes, stall. Owner: LIFE. */
+
+/* ---------- real coins (gold discs stamped 1 / 10) */
+.lcoin { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 800; color: #9a6a00; flex: none;
+  background: radial-gradient(circle at 35% 30%, #fff6c4, #ffd84a 45%, #e8a915 80%); border: 2px solid #c98f10;
+  box-shadow: inset 0 -3px 0 rgba(160,100,0,.35), 0 2px 3px rgba(80,50,0,.25); }
+.lcoin.one { width: 30px; height: 30px; font-size: 16px; }
+.lcoin.ten { width: 46px; height: 46px; font-size: 19px; border-width: 3px; box-shadow: inset 0 0 0 4px rgba(255,236,150,.8), inset 0 -3px 0 rgba(160,100,0,.35), 0 2px 4px rgba(80,50,0,.3); }
+.lcoin.blank { width: 50px; height: 50px; }
+.lcoin.hundred { background: radial-gradient(circle at 34% 30%, #fff4fa 0%, #ffc6df 30%, #ff94c0 60%, #d95c94 100%); border-color: #c4467f; color: #8a1f55; font-size: 16px; letter-spacing: -.8px;
+  box-shadow: inset 0 0 0 4px rgba(255,214,234,.8), inset 0 -3px 0 rgba(140,30,80,.3), 0 2px 4px rgba(80,20,50,.3); }
+/* WP9 review fix: the shop purse is ONE row (hundreds + at most 9 tens, each coin countable) – never taller than its strip */
+.lshop-purse .lpurse { flex-wrap: nowrap; }
+.lshop-purse .lp-tiers { flex-wrap: nowrap; max-width: none; gap: 3px; }
+.lcoin.fly { position: fixed; z-index: 70; margin: -15px 0 0 -15px; pointer-events: none; transition: left .55s ease-in, top .55s ease-in, opacity .55s; }
+
+/* purse view: tiers + 2×5 ten-frame + numeral */
+.lpurse { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.lp-tiers { display: flex; gap: 6px; flex-wrap: wrap; max-width: 260px; }
+.lp-frame { display: grid; grid-template-columns: repeat(5, 34px); grid-template-rows: repeat(2, 34px); gap: 3px; padding: 5px; background: #fff;
+  border: 2px solid #eadff7; border-radius: 10px; }
+.lp-cell { width: 34px; height: 34px; border-radius: 50%; background: #f4eefb; display: flex; align-items: center; justify-content: center; }
+.lp-num { min-width: 70px; padding: 4px 12px; font-size: 38px; font-weight: 800; text-align: center; background: #fffbe8; border: 3px solid var(--gold); border-radius: 16px; }
+
+/* ---------- shared panel */
+.life-panel .panel { padding: 22px 26px; }
+.life-panel.small .panel { min-width: 360px; }
+.lthumb-missing, .lshop-keeper-missing { width: 120px; height: 120px; border-radius: 22px; background: #f4eefb; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+
+/* ---------- shop */
+.lshop { display: flex; gap: 20px; width: min(1010px, 82vw); height: min(580px, 76vh); }
+.lshop-left { width: 270px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.lshop-head { display: flex; align-items: center; gap: 6px; }
+.lshop-sign { font-size: 28px; font-weight: 800; color: #fff; padding: 6px 24px; border-radius: 16px; letter-spacing: .5px;
+  background: linear-gradient(#c98d55, #a8703f); border: 3px solid #fff; box-shadow: 0 4px 0 #7c5230; text-shadow: 0 2px 0 rgba(0,0,0,.2); }
+.lshop-keeper img { width: 84px; height: 84px; }
+.lshop-stage { display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; transition: opacity .2s; }
+.lshop-stage.on { opacity: 1; }
+.lshop-big { width: 196px; height: 196px; border-radius: 30px; background: radial-gradient(circle at 50% 70%, #fff, #f6eefc 70%); display: flex; align-items: center; justify-content: center; }
+.lshop-big img { width: 196px; height: 196px; }
+.lshop-big.bought { animation: lbought .9s ease-out; }
+@keyframes lbought { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,216,74,.9); } 40% { transform: scale(1.12); } 100% { transform: scale(1); box-shadow: 0 0 0 34px rgba(255,216,74,0); } }
+.lshop-bigprice { font-size: 46px; font-weight: 800; min-width: 96px; text-align: center; padding: 2px 16px; background: #fffbe8; border: 4px solid var(--gold); border-radius: 18px; }
+.lshop-buy { display: flex; align-items: center; gap: 12px; min-width: 150px; justify-content: center; }
+.lshop-buy .lb-ok { font-size: 42px; color: #3f8f4a; }
+.lshop-buy.dim { filter: grayscale(.7); opacity: .6; }
+.lshop-poor { display: none; flex-direction: column; align-items: center; gap: 8px; }
+.lshop-poor.on { display: flex; }
+.lshop-nums .numtile { display: flex; align-items: center; gap: 6px; }
+.lshop-have { background: #fff6fb; }
+.lshop-pig { padding: 4px 10px; }
+.lshop-pig img { width: 90px; height: 70px; object-fit: contain; }
+.lshop-pig.on { box-shadow: 0 0 0 6px rgba(255,127,176,.5), var(--shadow); }
+.lshop-right { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.lshop-purse { display: flex; justify-content: flex-end; padding: 0 64px 2px 0; transform: scale(.74); transform-origin: right center; height: 58px; align-items: center; }
+.lshop-shelves { flex: 1; overflow-y: auto; padding: 4px 6px 10px; border-radius: 20px; background: linear-gradient(#fff3e2, #ffe9d2); }
+.lshop-shelf { display: flex; gap: 12px; justify-content: center; padding: 6px 8px 0; margin-bottom: 11px; border-bottom: 12px solid #c08a52;
+  border-radius: 0 0 6px 6px; box-shadow: 0 10px 0 -2px #9a6a3c; }
+.lshop-item { position: relative; width: 86px; border: none; background: none; padding: 0; display: flex; flex-direction: column; align-items: center; cursor: pointer;
+  transition: transform .12s; font-family: var(--font); }
+.lshop-item img, .lshop-item .lshop-missing { width: 86px; height: 86px; background: #f1e2cc; border-radius: 14px; box-shadow: 0 3px 6px rgba(120,80,40,.22); }
+.lshop-item:hover { transform: translateY(-4px); }
+.lshop-item.sel { transform: translateY(-8px); }
+.lshop-item.sel img { filter: drop-shadow(0 0 8px rgba(255,200,60,.95)); }
+.lshop-price { margin: 0 0 5px; min-width: 50px; padding: 0 8px; font-size: 25px; font-weight: 800; color: var(--ink); background: #fffbe8; border: 3px solid var(--gold); border-radius: 12px; }
+.lshop-owned { position: absolute; top: 2px; right: 2px; width: 26px; height: 26px; background: var(--gold);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.lshop-missing { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.lshop-missing img { width: 70% !important; height: auto !important; }
+.lsm-word { font-size: 18px; font-weight: 700; }
+
+/* ---------- talk / pocket money / gifts */
+.ltalk { display: grid; grid-template-columns: 200px 1fr; grid-template-rows: auto auto; gap: 14px 22px; align-items: center; min-width: min(760px, 86vw); }
+.lt-left { grid-row: 1 / span 2; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.lt-left img { width: 190px; height: 190px; }
+.lt-name { font-size: 28px; font-weight: 800; }
+.lt-mid { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+.lt-wish { position: relative; display: flex; flex-direction: column; align-items: center; padding: 8px 12px; background: #fff; border-radius: 26px; border: 3px solid #eadff7; }
+.lt-wish img { width: 150px; height: 150px; }
+.lt-price { font-size: 34px; font-weight: 800; min-width: 70px; text-align: center; padding: 0 12px; background: #fffbe8; border: 3px solid var(--gold); border-radius: 14px; }
+.lt-purse { padding: 10px 14px; background: #fff; border-radius: 22px; border: 3px solid #eadff7; }
+.lt-acts { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.lt-coin { min-width: 104px; min-height: 104px; display: flex; align-items: center; justify-content: center; border-radius: 30px; }
+.lt-coin .lcoin.one { width: 52px; height: 52px; font-size: 26px; }
+.lt-coin .lcoin.ten { width: 70px; height: 70px; font-size: 28px; }
+.lt-gifts { display: flex; gap: 12px; padding-left: 14px; border-left: 3px dashed #eadff7; }
+.lt-gift { width: 104px; height: 104px; border-radius: 24px; border: 3px solid #ffd1e4; background: #fff6fb; padding: 2px; cursor: pointer; box-shadow: var(--shadow); }
+.lt-gift img { width: 96px; height: 96px; }
+
+/* ---------- Ja / Nei */
+.lyesno { display: flex; justify-content: center; padding: 10px 30px; }
+.lyesno .chips { display: flex; gap: 28px; }
+
+/* ---------- picture chooser (build plots) */
+.lchooser { max-width: min(1000px, 88vw); }
+.lch-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; padding: 10px 40px 0 0; }
+.lch-item { width: 150px; height: 150px; border-radius: 28px; border: 3px solid #eadff7; background: #fff; padding: 0; cursor: pointer; box-shadow: var(--shadow); }
+.lch-item img { width: 144px; height: 144px; }
+.lch-item.cur { border-color: var(--gold); box-shadow: 0 0 0 5px rgba(245,197,66,.5), var(--shadow); }
+.lch-empty { width: 70px; height: 70px; margin: auto; border: 6px dashed #d9cdea; border-radius: 18px; }
+
+/* ---------- wish bubbles over characters (real model thumbnails + price chip) */
+.lifewish { position: absolute; left: 0; top: 0; pointer-events: auto; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+  background: #fff; border: 3px solid #fff; border-radius: 26px; padding: 4px 6px 6px; box-shadow: 0 6px 16px rgba(60,40,110,.28); will-change: transform; z-index: 16; }
+.lifewish::after { content: ''; position: absolute; left: 50%; bottom: -12px; margin-left: -10px; border: 10px solid transparent; border-top-color: #fff; border-bottom: 0; }
+.lifewish img { width: 74px; height: 74px; }
+/* clarity §3.2: one colour, one meaning. WHITE = «I wish for this – will you help?» (an offer, always optional); GOLD = «your goal
+   continues here» (a goal she took on). The thing her goal continues at gets the very same gold bubble (.thing: F.Quest's bubble over
+   the thing's top, a slightly smaller tail – it replaces the old 3D gold diamond). ✓ (.lw-done) = the work is done, come back here. */
+.lifewish.gold, .lifewish.thing { background: linear-gradient(#fff7cf, #ffe27a); border-color: #f5c542; animation: lwglow 1.2s ease-in-out infinite alternate; }
+.lifewish.gold::after, .lifewish.thing::after { border-top-color: #ffe27a; }
+.lifewish.thing::after { bottom: -10px; margin-left: -8px; border-width: 8px 8px 0; }
+.lw-done { position: absolute; right: -12px; top: -12px; width: 36px; height: 36px; box-sizing: border-box; border-radius: 50%; background: #3fbf5f; color: #fff;
+  font-size: 22px; font-weight: 800; line-height: 30px; text-align: center; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(30,90,40,.35); pointer-events: none;
+  animation: lwdone .45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes lwdone { from { transform: scale(0); } to { transform: scale(1); } }
+/* a puzzle invitation at a home (things_world's note, R5: class «lifewish gold home-invite») is not a goal she took on, so it is never
+   gold: until the P2 puzzle style lands, a white bubble with a silver-lilac edge, a lilac ★ and a slow soft twinkle (no gold glow) */
+.lifewish.home-invite, .lifewish.gold.home-invite { background: #fff; border-color: #d9cdf3; animation: lwtwinkle 2.4s ease-in-out infinite alternate; }
+.lifewish.home-invite::after, .lifewish.gold.home-invite::after { border-top-color: #fff; }
+.lifewish.home-invite .lw-dot { color: #9b86e8; }
+@keyframes lwtwinkle { from { box-shadow: 0 0 0 2px rgba(190,170,240,.4), 0 6px 16px rgba(60,40,110,.28); } to { box-shadow: 0 0 0 8px rgba(190,170,240,.1), 0 6px 16px rgba(60,40,110,.28); } }
+@keyframes lwglow { from { box-shadow: 0 0 0 3px rgba(245,197,66,.4), 0 6px 16px rgba(60,40,110,.28); } to { box-shadow: 0 0 0 12px rgba(245,197,66,.12), 0 6px 16px rgba(60,40,110,.28); } }
+.lw-price { font-size: 24px; font-weight: 800; min-width: 44px; text-align: center; padding: 0 6px; background: #fffbe8; border: 3px solid var(--gold); border-radius: 12px; margin-top: 2px; }
+.lw-dot { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #e0a91e; }
+.abubble { max-width: 380px; white-space: normal; text-align: center; font-size: 22px; z-index: 17; }
+
+/* ---------- envelope card (one word to read) */
+.lenv { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 420px; padding: 0 30px 4px; }
+.lenv-card { position: relative; width: 380px; padding: 18px 20px 22px; border-radius: 22px; background: #fffdf4; border: 3px solid #e8cfa0;
+  box-shadow: 0 6px 0 #e3cfa8; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.lenv-card img { width: 160px; height: 160px; }
+.lenv-word { font-size: 64px; font-weight: 800; letter-spacing: 2px; padding: 0 24px; border-radius: 18px; background: #fff; border: 3px solid #eadff7; cursor: pointer; }
+.lenv-from img { width: 80px; height: 80px; }
+.lenv-seal { position: absolute; top: -18px; right: -14px; width: 54px; height: 54px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #ff9ab8, #e8484f); border: 3px solid #fff; }
+
+/* ---------- Kongeposten */
+.lpaper { width: min(760px, 86vw); padding: 16px 26px 22px; background: #fffdf6; border-radius: 10px; box-shadow: inset 0 0 0 3px #eadfc8; }
+.lpaper-title { font-size: 40px; font-weight: 800; text-align: center; border-bottom: 4px double #c9b48a; padding-bottom: 6px; margin-bottom: 12px; }
+.lpaper-row { display: flex; align-items: center; gap: 16px; padding: 10px 6px; border-bottom: 2px solid #efe6d2; font-size: 32px; font-weight: 700; cursor: pointer; }
+.lpaper-row img { width: 84px; height: 84px; flex: none; }
+.lpaper-row:last-child { border-bottom: 0; }
+
+/* ---------- stall stock plaques */
+.wlabel.k-stock { font-size: 22px; background: #fffbe8; border: 2px solid var(--gold); }
+
+@media (max-height: 720px) {
+  .lshop { height: min(560px, 80vh); }
+  .lshop-big, .lshop-big img { width: 170px; height: 170px; }
+  .lshop-item img, .lshop-item .lshop-missing { width: 82px; height: 82px; }
+  .lshop-item { width: 82px; }
+  .lshop-shelf { margin-bottom: 8px; border-bottom-width: 10px; padding-top: 4px; }
+  .lshop-price { font-size: 22px; margin-bottom: 3px; }
+  .lshop-shelves { padding-bottom: 6px; }
+  .lt-left img { width: 150px; height: 150px; }
+  .lt-wish img { width: 120px; height: 120px; }
+}
+
+/* ================================================================ WP9: themed kingdom shops (DESIGN2 §6.2)
+   .shop-panel.th-<theme> (panel frame) and .lshop.th-<theme> (sign, shelves). .lshop.roomy = ≤ 9 items, 2 rows of big cards.
+   Every skin sets --sh-bg (panel), --sh-sign1/2/edge (sign), --sh-shelves1/2 (back wall), --sh-wood/--sh-wood2 (shelf boards), --sh-accent. */
+.lshop.roomy .lshop-shelf { gap: 18px; padding-top: 10px; margin-bottom: 16px; }
+.lshop.roomy .lshop-item { width: 118px; }
+.lshop.roomy .lshop-item img, .lshop.roomy .lshop-item .lshop-missing { width: 118px; height: 118px; }
+.lshop.roomy .lshop-shelves { display: flex; flex-direction: column; justify-content: center; }
+/* W2: 10–14 items (Tryllebua in Regnbueslottet): centre the two rows in the shelf box and leave room above the first row, so the
+   lifted selected card is never clipped by the scroll box or hidden under a skin's top band (the rainbow stripes) */
+.lshop:not(.roomy) .lshop-shelves { display: flex; flex-direction: column; justify-content: safe center; padding-top: 16px; }
+.lshop:not(.roomy) .lshop-shelf { flex: none; }
+.lshop.th-regnbue:not(.roomy) .lshop-shelves { padding-top: 40px; }
+@media (max-height: 720px) { .lshop:not(.roomy) .lshop-shelves { padding-top: 10px; } .lshop.th-regnbue:not(.roomy) .lshop-shelves { padding-top: 36px; } }
+.lshop-item.dream img, .lshop-item.dream .lshop-missing { box-shadow: 0 0 0 4px #f5c542, 0 0 18px 4px rgba(255,214,90,.75); background: radial-gradient(circle at 50% 40%, #fffbe6, #ffe9a8); }
+.lshop-item.dream .lshop-price { background: linear-gradient(#fff6c4, #ffd84a); }
+.lshop-item.dream::before { content: ''; position: absolute; top: -10px; left: 50%; margin-left: -13px; width: 26px; height: 26px; background: #ffd84a; z-index: 1;
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); filter: drop-shadow(0 1px 1px rgba(150,100,0,.5)); }
+.lshop[class*=' th-'] .lshop-sign { background: linear-gradient(var(--sh-sign1), var(--sh-sign2)); box-shadow: 0 4px 0 var(--sh-edge); }
+.lshop[class*=' th-'] .lshop-shelves { background: var(--sh-deco, none), linear-gradient(var(--sh-shelves1), var(--sh-shelves2)); }
+.lshop[class*=' th-'] .lshop-shelf { border-bottom-color: var(--sh-wood); box-shadow: 0 10px 0 -2px var(--sh-wood2); }
+.lshop[class*=' th-'] .lshop-item img, .lshop[class*=' th-'] .lshop-item .lshop-missing { background: var(--sh-card, #f1e2cc); }
+.lshop[class*=' th-'] .lshop-big { background: radial-gradient(circle at 50% 70%, #fff, var(--sh-card, #f6eefc) 75%); }
+.shop-panel[class*=' th-'] .panel { background: var(--sh-bg); border-color: var(--sh-accent); }
+
+.th-blomst { --sh-bg: linear-gradient(#fff5f9, #f0fbe9); --sh-accent: #ffc4dc; --sh-sign1: #ff8fbd; --sh-sign2: #e8609a; --sh-edge: #b84677;
+  --sh-shelves1: #f4ffe9; --sh-shelves2: #ddf5cf; --sh-wood: #7fbf5a; --sh-wood2: #5d9a3f; --sh-card: #ffe6f0;
+  --sh-deco: radial-gradient(circle at 8% 12%, #ffb3d1 0 7px, transparent 8px), radial-gradient(circle at 92% 18%, #fff08a 0 6px, transparent 7px),
+    radial-gradient(circle at 85% 88%, #ffb3d1 0 6px, transparent 7px), radial-gradient(circle at 12% 90%, #c9a8ff 0 6px, transparent 7px); }
+.th-hest { --sh-bg: linear-gradient(#fff8ee, #f6e6cf); --sh-accent: #e9c48f; --sh-sign1: #c9503f; --sh-sign2: #9e3427; --sh-edge: #6f2219;
+  --sh-shelves1: #fbe9cc; --sh-shelves2: #efd29f; --sh-wood: #a8703f; --sh-wood2: #7c5230; --sh-card: #fff3dc;
+  --sh-deco: repeating-linear-gradient(90deg, rgba(160,110,60,.10) 0 2px, transparent 2px 46px); }
+.th-boble { --sh-bg: linear-gradient(#f2fbff, #dff3fb); --sh-accent: #b9e6f7; --sh-sign1: #5cc4e8; --sh-sign2: #2c9bc7; --sh-edge: #1d7397;
+  --sh-shelves1: #ecfaff; --sh-shelves2: #cdeefa; --sh-wood: #7fd0e6; --sh-wood2: #4fb0cc; --sh-card: #f0fbff;
+  --sh-deco: radial-gradient(circle at 10% 20%, transparent 9px, rgba(120,200,235,.55) 10px 12px, transparent 13px), radial-gradient(circle at 90% 30%, transparent 6px, rgba(120,200,235,.55) 7px 9px, transparent 10px),
+    radial-gradient(circle at 80% 85%, transparent 11px, rgba(120,200,235,.5) 12px 14px, transparent 15px), radial-gradient(circle at 18% 80%, transparent 5px, rgba(120,200,235,.5) 6px 8px, transparent 9px); }
+.th-skjell { --sh-bg: linear-gradient(#fffaf0, #e9f8f4); --sh-accent: #f3dfb8; --sh-sign1: #3fb7a8; --sh-sign2: #23897d; --sh-edge: #17645b;
+  --sh-shelves1: #fff6e2; --sh-shelves2: #f3e2bd; --sh-wood: #d9b98a; --sh-wood2: #b8945f; --sh-card: #fff8ea;
+  --sh-deco: radial-gradient(ellipse at 50% 108%, rgba(80,190,200,.35) 0 30%, transparent 31%); }
+.th-kake { --sh-bg: linear-gradient(#fff6f0, #ffe9e0); --sh-accent: #ffc9b5; --sh-sign1: #ff9b8a; --sh-sign2: #e8656d; --sh-edge: #b84452;
+  --sh-shelves1: #fff2f5; --sh-shelves2: #ffdfe6; --sh-wood: #c98d55; --sh-wood2: #8f5a34; --sh-card: #fff7ee;
+  --sh-deco: radial-gradient(circle at 15% 14%, #ff6f7d 0 4px, transparent 5px), radial-gradient(circle at 30% 10%, #ffd84a 0 3px, transparent 4px), radial-gradient(circle at 80% 12%, #8fd3ff 0 4px, transparent 5px), radial-gradient(circle at 88% 22%, #b7e88f 0 3px, transparent 4px); }
+.th-musikk { --sh-bg: linear-gradient(#f5f6ff, #e6e9fb); --sh-accent: #c9cff3; --sh-sign1: #4a5ba8; --sh-sign2: #2f3d82; --sh-edge: #1f2a5e;
+  --sh-shelves1: #f4f5ff; --sh-shelves2: #dfe3fa; --sh-wood: #e2b84a; --sh-wood2: #b48a24; --sh-card: #fffdf2;
+  --sh-deco: repeating-linear-gradient(0deg, transparent 0 18px, rgba(70,90,170,.12) 18px 20px); }
+.th-stjerne { --sh-bg: linear-gradient(#f4efff, #e7defc); --sh-accent: #d3c3f7; --sh-sign1: #6b58b8; --sh-sign2: #46378a; --sh-edge: #2e2363;
+  --sh-shelves1: #3b3577; --sh-shelves2: #2a2560; --sh-wood: #e8c45a; --sh-wood2: #b08d2c; --sh-card: #fdf8ff;
+  --sh-deco: radial-gradient(circle at 12% 15%, #fff6b0 0 2px, transparent 3px), radial-gradient(circle at 40% 8%, #fff 0 2px, transparent 3px), radial-gradient(circle at 70% 18%, #fff6b0 0 3px, transparent 4px),
+    radial-gradient(circle at 88% 8%, #fff 0 2px, transparent 3px), radial-gradient(circle at 25% 92%, #fff 0 2px, transparent 3px), radial-gradient(circle at 60% 95%, #fff6b0 0 2px, transparent 3px), radial-gradient(circle at 92% 88%, #fff 0 3px, transparent 4px); }
+.th-sno { --sh-bg: linear-gradient(#f7fcff, #e4f2fb); --sh-accent: #cfe8f7; --sh-sign1: #7cc0e8; --sh-sign2: #4e98c8; --sh-edge: #33709a;
+  --sh-shelves1: #fbfeff; --sh-shelves2: #e1f1fb; --sh-wood: #bcdcf0; --sh-wood2: #93bcd8; --sh-card: #ffffff;
+  --sh-deco: radial-gradient(circle at 10% 15%, #fff 0 5px, transparent 6px), radial-gradient(circle at 85% 12%, #fff 0 4px, transparent 5px), radial-gradient(circle at 92% 80%, #fff 0 6px, transparent 7px), radial-gradient(circle at 6% 85%, #fff 0 4px, transparent 5px); }
+.th-krystall { --sh-bg: linear-gradient(#fbf8ff, #ece6fb); --sh-accent: #dcd0fa; --sh-sign1: #a78bfa; --sh-sign2: #7c5fd6; --sh-edge: #5a41a8;
+  --sh-shelves1: #f6f2ff; --sh-shelves2: #e4dafc; --sh-wood: #c4b5fd; --sh-wood2: #9b86e8; --sh-card: #fbf9ff;
+  --sh-deco: linear-gradient(135deg, transparent 46%, rgba(255,255,255,.7) 50%, transparent 54%), linear-gradient(45deg, transparent 47%, rgba(200,180,255,.35) 50%, transparent 53%); }
+.th-regnbue { --sh-bg: linear-gradient(#fff, #fff6fb); --sh-accent: #ffd1e4; --sh-sign1: #ff7fb0; --sh-sign2: #a78bfa; --sh-edge: #6b58b8;
+  --sh-shelves1: #fffafd; --sh-shelves2: #fff0f7; --sh-wood: #ffb26b; --sh-wood2: #e8609a; --sh-card: #fff;
+  --sh-deco: linear-gradient(180deg, rgba(255,111,125,.18) 0 6px, rgba(255,178,107,.18) 6px 12px, rgba(255,216,74,.18) 12px 18px, rgba(127,214,140,.18) 18px 24px, rgba(120,190,255,.18) 24px 30px, rgba(167,139,250,.18) 30px 36px, transparent 36px); }
+.lshop.th-regnbue .lshop-sign { background: linear-gradient(90deg, #ff6f7d, #ffb26b, #ffd84a, #7fd68c, #78beff, #a78bfa); }
+.lshop.th-stjerne .lshop-price { color: var(--ink); }
+/* WP9: short windows (≈ 1280 × 700 browsers): keep the left column (item, price, «you have / it costs», piggy bank) inside the panel */
+@media (max-height: 660px) {
+  .lshop { height: min(520px, 82vh); }
+  .lshop-left { gap: 6px; }
+  .lshop-keeper img { width: 64px; height: 64px; }
+  .lshop-sign { font-size: 24px; padding: 4px 18px; }
+  .lshop-big, .lshop-big img { width: 132px; height: 132px; }
+  .lshop-bigprice { font-size: 36px; min-width: 80px; }
+  .lshop-poor { gap: 4px; }
+  .lshop-nums .numtile { font-size: 34px; min-height: 64px; }
+  .lshop-pig img { width: 72px; height: 56px; }
+  .lshop.roomy .lshop-item, .lshop.roomy .lshop-item img, .lshop.roomy .lshop-item .lshop-missing { width: 104px; }
+  .lshop.roomy .lshop-item img, .lshop.roomy .lshop-item .lshop-missing { height: 104px; }
+  .lshop.roomy .lshop-shelf { margin-bottom: 10px; padding-top: 6px; }
+}

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feslottet</title>
+<link rel="stylesheet" href="css/font_andika.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/album.css">
+<link rel="stylesheet" href="css/castle.css">
+<link rel="stylesheet" href="css/doors.css">
+<link rel="stylesheet" href="css/f_num.css">
+<link rel="stylesheet" href="css/hud.css">
+<link rel="stylesheet" href="css/kit.css">
+<link rel="stylesheet" href="css/shop.css">
+<link rel="stylesheet" href="css/task.css">
+<link rel="stylesheet" href="css/title.css">
+<link rel="stylesheet" href="css/trylleboka.css">
+<link rel="stylesheet" href="css/wand.css">
+</head>
+<body>
+<div id="view"></div>
+<div id="bubbles"></div>
+<div id="hud"></div>
+<div id="panels"></div>
+<div id="toasts"></div>
+<div id="sub"></div>
+<div id="screens"></div>
+<script src="js/three.min.js"></script>
+<script src="js/core/00_core.js"></script>
+<script src="js/core/save.js"></script>
+<script src="js/core/audio.js"></script>
+<script src="js/core/models.js"></script>
+<script src="js/core/vox.js"></script>
+<script src="js/core/render.js"></script>
+<script src="js/core/things.js"></script>
+<script src="js/core/space.js"></script>
+<script src="js/core/world.js"></script>
+<script src="js/core/player.js"></script>
+<script src="js/core/input.js"></script>
+<script src="js/core/ui.js"></script>
+<script src="js/core/fx.js"></script>
+<script src="js/core/stubs.js"></script>
+<script src="js/data/animal_themes.js"></script>
+<script src="js/data/catalog.js"></script>
+<script src="js/data/fauna.js"></script>
+<script src="js/data/realms.js"></script>
+<script src="js/data/sets.js"></script>
+<script src="js/data/words.js"></script>
+<script src="js/speech/tpl.js"></script>
+<script src="js/speech/lines_castle.js"></script>
+<script src="js/speech/lines_catch.js"></script>
+<script src="js/speech/lines_clarity.js"></script>
+<script src="js/speech/lines_fairy.js"></script>
+<script src="js/speech/lines_fauna.js"></script>
+<script src="js/speech/lines_home.js"></script>
+<script src="js/speech/lines_learn.js"></script>
+<script src="js/speech/lines_lesf.js"></script>
+<script src="js/speech/lines_life.js"></script>
+<script src="js/speech/lines_life2.js"></script>
+<script src="js/speech/lines_num.js"></script>
+<script src="js/speech/lines_num2.js"></script>
+<script src="js/speech/lines_obj.js"></script>
+<script src="js/speech/lines_prob.js"></script>
+<script src="js/speech/lines_reason.js"></script>
+<script src="js/speech/lines_royals.js"></script>
+<script src="js/speech/lines_rq.js"></script>
+<script src="js/speech/lines_rw.js"></script>
+<script src="js/speech/lines_shell.js"></script>
+<script src="js/speech/lines_shop.js"></script>
+<script src="js/speech/lines_space.js"></script>
+<script src="js/speech/lines_stage.js"></script>
+<script src="js/speech/lines_trylle.js"></script>
+<script src="js/speech/lines_vit.js"></script>
+<script src="js/speech/lines_world.js"></script>
+<script src="js/models/m_animals.js"></script>
+<script src="js/models/m_animals2.js"></script>
+<script src="js/models/m_castle.js"></script>
+<script src="js/models/m_castlegen.js"></script>
+<script src="js/models/m_catalog.js"></script>
+<script src="js/models/m_food.js"></script>
+<script src="js/models/m_furniture.js"></script>
+<script src="js/models/m_nature.js"></script>
+<script src="js/models/m_park.js"></script>
+<script src="js/models/m_people.js"></script>
+<script src="js/models/m_rooms.js"></script>
+<script src="js/models/m_shop2.js"></script>
+<script src="js/models/m_slots.js"></script>
+<script src="js/models/m_tower.js"></script>
+<script src="js/models/m_toys_clothes.js"></script>
+<script src="js/models/m_village.js"></script>
+<script src="js/learn/ladders.js"></script>
+<script src="js/learn/banks.js"></script>
+<script src="js/learn/banks_regn.js"></script>
+<script src="js/learn/engine.js"></script>
+<script src="js/learn/gen_reason.js"></script>
+<script src="js/learn/gen_vit.js"></script>
+<script src="js/game/actors.js"></script>
+<script src="js/game/befriend.js"></script>
+<script src="js/game/behaviours.js"></script>
+<script src="js/game/buildings.js"></script>
+<script src="js/game/castle.js"></script>
+<script src="js/game/economy.js"></script>
+<script src="js/game/fairy.js"></script>
+<script src="js/game/fauna.js"></script>
+<script src="js/game/firsts.js"></script>
+<script src="js/game/hud.js"></script>
+<script src="js/game/map.js"></script>
+<script src="js/game/onboard.js"></script>
+<script src="js/game/park.js"></script>
+<script src="js/game/progress.js"></script>
+<script src="js/game/purse.js"></script>
+<script src="js/game/quests.js"></script>
+<script src="js/game/quests_realm.js"></script>
+<script src="js/game/realm.js"></script>
+<script src="js/game/royals.js"></script>
+<script src="js/game/sfx_animals.js"></script>
+<script src="js/game/shop.js"></script>
+<script src="js/game/stall.js"></script>
+<script src="js/game/things_castle.js"></script>
+<script src="js/game/things_park.js"></script>
+<script src="js/game/things_world.js"></script>
+<script src="js/game/title.js"></script>
+<script src="js/game/tower.js"></script>
+<script src="js/game/towns.js"></script>
+<script src="js/game/travel.js"></script>
+<script src="js/game/wand.js"></script>
+<script src="js/game/weather.js"></script>
+<script src="js/game/worldgen.js"></script>
+<script src="js/game/tasks/stage.js"></script>
+<script src="js/game/tasks/kit.js"></script>
+<script src="js/game/tasks/f_lesf.js"></script>
+<script src="js/game/tasks/f_num.js"></script>
+<script src="js/game/tasks/f_num2.js"></script>
+<script src="js/game/tasks/f_prob.js"></script>
+<script src="js/game/tasks/f_read.js"></script>
+<script src="js/game/tasks/f_reason.js"></script>
+<script src="js/game/tasks/f_space.js"></script>
+<script src="js/game/tasks/f_write.js"></script>
+<script src="js/ui/album.js"></script>
+<script src="js/ui/bldmap.js"></script>
+<script src="js/ui/goal.js"></script>
+<script src="js/ui/trylleboka.js"></script>
+<script src="audio/speech.js"></script>
+<script src="js/debug.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

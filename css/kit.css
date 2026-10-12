@@ -1,0 +1,217 @@
+/* Feslottet – v4 widget kit (js/game/tasks/kit.js) + «Tenk først» protocol looks (think-gate fill, «Hjelp meg», fixed-slot keypad).
+   Owner: WP-K. Boards float above the tray; tray buttons follow the chip sizes of task.css (targets ≥ 64 px, text ≥ 22 px). */
+:root { --kcell: 64px; --kcard: 92px; --kstone: 58px; }
+@media (max-height: 720px) { :root { --kcell: 54px; --kcard: 80px; --kstone: 50px; } }
+
+/* ---------------------------------------------------------- board above the tray */
+.kboard { position: fixed; left: 50%; bottom: calc(var(--tray-h, 0px) + 34px); transform: translate(-50%, 24px) scale(.9); opacity: 0; z-index: 17;
+  max-width: min(1180px, 94vw); max-height: calc(100vh - var(--tray-h, 0px) - 170px); overflow: auto; padding: 14px 18px; border-radius: 26px;
+  background: rgba(255, 250, 243, .93); border: 3px solid #fff; box-shadow: 0 8px 0 rgba(60,40,110,.12), 0 14px 34px rgba(60,40,110,.2);
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; transition: transform .3s cubic-bezier(.2,.9,.3,1.2), opacity .25s;
+  font-family: var(--font); color: var(--ink); }
+.kboard.on { transform: translate(-50%, 0) scale(1); opacity: 1; }
+.tray-in .kboard { position: static; transform: none; opacity: 1; box-shadow: none; border: 0; background: none; padding: 0; max-height: none; }
+.kboard.klocked, .kboard .klocked { pointer-events: none; filter: saturate(.8); }
+.kshake { animation: shake .35s; }
+
+/* ---------------------------------------------------------- cards (tapAll / order / sortAll / palettes) */
+.kcard { position: relative; min-width: var(--kcard); height: var(--kcard); padding: 6px 12px; border-radius: 22px; border: 3px solid var(--line, #d9cdf2);
+  background: linear-gradient(#fff, #fbf6ff); color: var(--ink); font-family: var(--font); font-weight: 700; font-size: 40px; cursor: pointer;
+  box-shadow: 0 5px 0 rgba(60,40,110,.16); display: flex; align-items: center; justify-content: center; transition: transform .1s, box-shadow .15s, background .2s;
+  animation: chipIn .38s cubic-bezier(.2,.9,.3,1.35) backwards; animation-delay: calc(var(--i, 0) * 50ms + 60ms); }
+.kcard:active { transform: translateY(2px); }
+.kcard.ksmall { min-width: 72px; height: 72px; font-size: 32px; border-radius: 18px; }
+.kcard.ksel { border-color: #8a6fd1; background: linear-gradient(#f3ecff, #e2d5ff); transform: translateY(-4px); box-shadow: 0 0 0 4px rgba(138,111,209,.35), 0 6px 0 rgba(60,40,110,.18); }
+.kboard.kmany .kcard { min-width: 76px; height: 76px; font-size: 32px; }
+.kface { display: inline-flex; align-items: center; justify-content: center; gap: 6px; pointer-events: none; line-height: 1; }
+.kface.kthumb img { width: calc(var(--kcard) - 18px); height: calc(var(--kcard) - 18px); object-fit: contain; }
+.ksmall .kface.kthumb img { width: 58px; height: 58px; }
+.kface.kword { font-size: 30px; }
+.kface.kicon { font-size: 44px; }
+.kface .klab { font-size: 22px; }
+.kface.kswatch { width: 44px; height: 44px; border-radius: 50%; border: 3px solid rgba(0,0,0,.12); }
+.kglow { animation: glowp 0.9s ease-in-out infinite alternate; border-color: var(--gold2, #e0a91e) !important; z-index: 1; }
+.kright { border-color: var(--ok, #4cc38a) !important; background: linear-gradient(#e9fff1, #c8f5da) !important; }
+.kwrong { animation: shake .35s; }
+
+/* ---------------------------------------------------------- tray buttons: Ferdig / Sjekk / ✓ */
+.kbtn { min-width: 150px; height: 84px; padding: 0 26px; border-radius: 28px; border: 3px solid var(--gold2, #e0a91e); font-family: var(--font); font-weight: 700; font-size: 34px;
+  background: linear-gradient(#ffe68a, var(--gold, #f5c542)); color: #7a5300; cursor: pointer; box-shadow: 0 5px 0 rgba(150,100,0,.25), 0 8px 18px rgba(60,40,110,.15);
+  display: flex; align-items: center; justify-content: center; flex: none; transition: opacity .2s, transform .1s; }
+.kbtn:active { transform: translateY(2px); }
+.kbtn.koff { opacity: .4; }
+.kbtn.kready { animation: glowp .9s ease-in-out infinite alternate; }
+.kbtn.kok { min-width: 84px; width: 84px; border-radius: 50%; font-size: 40px; }
+.kbtn.ksmallbtn { min-width: 84px; width: 84px; background: linear-gradient(#fff, #f2ecff); border-color: var(--line, #d9cdf2); color: var(--ink2, #5b4b8a); font-size: 44px; }
+.kbtn.ksmallbtn.ksel { background: linear-gradient(#ffe2ea, #ffc9d6); border-color: #e48aa6; }
+@media (max-height: 720px) { .kbtn { height: 72px; font-size: 30px; min-width: 130px; } .kbtn.kok, .kbtn.ksmallbtn { width: 72px; min-width: 72px; } }
+
+/* ---------------------------------------------------------- order shelf */
+.korder { flex-direction: column; }
+.kshelf { display: flex; gap: 10px; padding: 10px 14px 16px; border-radius: 16px; background: linear-gradient(#e9d6b6, #d4b88e); box-shadow: inset 0 -6px 0 rgba(120,80,30,.25); }
+.kslot { position: relative; min-width: var(--kcard); height: var(--kcard); border-radius: 20px; border: 3px dashed rgba(120,80,30,.45); background: rgba(255,255,255,.45); display: flex; align-items: center; justify-content: center; }
+.kslot .kslotn { position: absolute; left: 6px; top: 2px; font-size: 18px; color: rgba(120,80,30,.6); font-weight: 700; }
+.kslot .kcard { animation: none; }
+.kbank { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; min-height: var(--kcard); }
+
+/* ---------------------------------------------------------- sort baskets */
+.ksort { flex-direction: column; }
+.kpool { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; min-height: 72px; }
+.kbins { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.kbin { min-width: 180px; min-height: 120px; border-radius: 20px 20px 34px 34px; border: 4px solid #c99a5b; background: linear-gradient(#fff4dc, #f2d7a6);
+  display: flex; flex-direction: column; align-items: center; padding: 6px; cursor: pointer; transition: transform .15s; }
+.kbin.ktarget { transform: translateY(-3px); box-shadow: 0 0 0 4px rgba(138,111,209,.3); }
+.kbinhead { font-size: 40px; min-height: 52px; display: flex; align-items: center; }
+.kbinin { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 320px; }
+.kbinin .kcard { animation: none; }
+
+/* ---------------------------------------------------------- stepping stones */
+.kstones { flex-direction: column; gap: 8px; position: relative; padding-top: 30px; background: linear-gradient(#e3f6ff, #c7ecfb); }
+.kstonerow { display: flex; gap: 8px; }
+.kstonerow.krev { flex-direction: row-reverse; }
+.kstone { width: var(--kstone); height: calc(var(--kstone) * .78); border-radius: 50%; border: 3px solid #8a8fa3; background: radial-gradient(ellipse at 40% 30%, #fdfdfd, #c9ccd8 70%, #a3a7b8);
+  font-family: var(--font); font-weight: 700; font-size: 22px; color: #3b3360; cursor: pointer; box-shadow: 0 4px 0 rgba(40,60,90,.25); padding: 0;
+  animation: chipIn .3s cubic-bezier(.2,.9,.3,1.35) backwards; animation-delay: calc(var(--i, 0) * 14ms); }
+.kstones.kdense .kstone { font-size: 20px; }
+.kstone.kblank { background: radial-gradient(ellipse at 40% 30%, #fffbe8, #f6e3a6 70%, #e0c271); border-color: #c9a640; }
+.kstone.ksel { border-color: #8a6fd1; box-shadow: 0 0 0 4px rgba(138,111,209,.45), 0 4px 0 rgba(40,60,90,.25); transform: translateY(-3px); }
+.kfrog { position: absolute; font-size: 36px; transform: translate(-50%, -70%); transition: left .35s cubic-bezier(.3,.7,.4,1), top .35s; pointer-events: none; z-index: 2; left: 0; top: 0; }
+.khop { animation: khop .35s ease-out; }
+@keyframes khop { 40% { transform: translate(-50%, -120%) scale(1.1); } }
+.kcard.khop { animation: kcardhop .4s ease-out; }
+@keyframes kcardhop { 40% { transform: translateY(-18px) scale(1.08); } }
+
+/* ---------------------------------------------------------- unmarked line */
+.kline { width: min(1000px, 88vw); padding: 46px 40px 40px; }
+.krail { position: relative; width: 100%; height: 34px; border-radius: 17px; background: linear-gradient(#c79b62, #9c7040); cursor: pointer; box-shadow: inset 0 -5px 0 rgba(80,50,20,.3); }
+.ktick { position: absolute; top: -8px; width: 4px; height: 50px; margin-left: -2px; background: #5b3e1e; border-radius: 2px; pointer-events: none; }
+.ktick span { position: absolute; top: 52px; left: 50%; transform: translateX(-50%); font-size: 28px; font-weight: 700; color: var(--ink); }
+.kpin { position: absolute; top: -44px; font-size: 38px; transform: translateX(-50%); transition: left .3s; pointer-events: none; }
+.kpinlab { position: absolute; top: -86px; transform: translateX(-50%); font-size: 28px; font-weight: 700; background: #fff; border-radius: 12px; padding: 2px 10px; border: 3px solid #e48aa6; pointer-events: none; }
+.kzone { position: absolute; top: -6px; height: 46px; border-radius: 10px; background: rgba(255,224,102,.55); border: 3px solid var(--gold2, #e0a91e); pointer-events: none; }
+
+/* ---------------------------------------------------------- grid / plan */
+.kgridin, .kplan { display: grid; gap: 4px; padding: 6px; background: #7fb36e; border-radius: 14px; }
+.kcell { width: var(--kcell); height: var(--kcell); border-radius: 10px; border: 2px solid rgba(60,90,40,.35); background: #b98a56; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font); font-size: 30px; font-weight: 700; color: #fff; cursor: pointer; padding: 0; position: relative; }
+.kcell.kgiven { background: #a17345; cursor: default; box-shadow: inset 0 0 0 3px rgba(255,255,255,.35); }
+.kcell.kbl { margin-left: 6px; }
+.kcell.kbt { margin-top: 6px; }
+.kcell .kface.kicon { font-size: calc(var(--kcell) * .62); }
+.kcell .kghostsym { opacity: .35; position: absolute; }
+.kpalette { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.kplan { background: #9ccf8e; }
+.kvcell { background: #e9f5e2; color: #8a5a10; }
+.kvcell.kfilled { background: linear-gradient(#ffe08a, #f2b84b); }
+.kvcell .kghostn { position: absolute; right: 4px; bottom: 2px; font-size: 18px; color: #b07a1a; }
+.kiso svg { display: block; max-height: 42vh; width: auto; }
+
+/* ---------------------------------------------------------- balance */
+.kbal { flex-direction: column; position: relative; padding-top: 18px; min-width: 620px; }
+.kbeam { position: relative; width: 560px; height: 14px; border-radius: 7px; background: linear-gradient(#b0814a, #8b5e2c); margin: 110px 0 0; transition: transform .8s cubic-bezier(.3,1.6,.5,1); }
+.kpost { width: 18px; height: 70px; background: linear-gradient(90deg, #8b5e2c, #b0814a); border-radius: 0 0 8px 8px; }
+.kpan { position: absolute; bottom: 14px; width: 210px; min-height: 90px; border-radius: 0 0 90px 90px; border: 4px solid #c99a5b; border-top: 0; background: rgba(255,244,220,.9);
+  display: flex; flex-wrap: wrap-reverse; gap: 4px; align-items: flex-end; justify-content: center; padding: 6px; }
+.kpanl { left: -40px; } .kpanr { right: -40px; }
+.kpan.kact { box-shadow: 0 0 0 4px rgba(138,111,209,.4); }
+.kweight { min-width: 58px; height: 58px; border-radius: 14px; border: 3px solid #b9a5f0; background: #fff; font-family: var(--font); font-weight: 700; font-size: 26px; cursor: pointer; padding: 0 4px; }
+.kweight.kfixed { border-color: #c99a5b; cursor: default; background: #fff7e6; }
+/* v5 WP-K3: the lock peg that holds the beam while she loads (pulled out on «Sjekk»), the solution's ghost blocks and the «×n» badge */
+.kpeg { position: absolute; left: 50%; top: 119px; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ff8c86, #c9302c);
+  border: 3px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,.3); transition: opacity .25s, transform .25s; z-index: 2; pointer-events: none; }
+.kpeg.kpegout { opacity: 0; transform: translateY(-24px); }
+.kweight.kghost { opacity: .4; border-style: dashed; cursor: default; pointer-events: none; }
+.kcard .kbadge { position: absolute; right: -8px; top: -10px; min-width: 34px; height: 30px; padding: 0 6px; border-radius: 15px; background: #e0a91e; color: #fff;
+  font-family: var(--font); font-weight: 700; font-size: 20px; line-height: 30px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,.25); pointer-events: none; }
+
+/* ---------------------------------------------------------- digit wheels */
+.kwheels { gap: 14px; }
+.kwheel { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.kwbtn { width: 64px; height: 50px; border-radius: 14px; border: 3px solid var(--line, #d9cdf2); background: linear-gradient(#fff, #f2ecff); font-size: 24px; cursor: pointer; color: var(--ink2, #5b4b8a); }
+.kwdig { width: 64px; height: 56px; border-radius: 14px; background: linear-gradient(#5b4b8a, #3b2f5c); color: #ffe68a; font-family: var(--font); font-size: 46px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; box-shadow: inset 0 4px 8px rgba(0,0,0,.4); }
+
+/* ---------------------------------------------------------- ribbons (bar model) */
+.kribbons { flex-direction: column; align-items: stretch; width: min(980px, 90vw); }
+.kribrow { display: flex; align-items: center; gap: 12px; position: relative; }
+.kribname { width: 120px; font-size: 26px; font-weight: 700; text-align: right; }
+.kribbon { height: 56px; border-radius: 12px; border: 3px solid #c0567f; background: repeating-linear-gradient(90deg, #ff9fc2 0 calc(100% / var(--units, 10)), #ffb8d2 0 calc(200% / var(--units, 10))); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-family: var(--font); font-size: 30px; font-weight: 700; color: #6a1f3f; padding: 0; }
+.kribdiff, .kribtot { height: 56px; min-width: 64px; border-radius: 14px; border: 3px dashed #8a6fd1; background: #fff; font-size: 26px; font-weight: 700; cursor: pointer; color: #5b4b8a; }
+.kribctl { display: flex; gap: 16px; justify-content: center; margin-left: 132px; }
+/* v5 WP-K3: part-whole layout (S.ribbons {layout:'pw', whole}) – the whole on top, the parts side by side, braces under the parts */
+.kribpw { gap: 8px; }
+.kribsegs { display: flex; flex: 1; gap: 4px; min-width: 0; }
+.kribseg { flex-direction: column; line-height: 1; gap: 2px; min-width: 0; }
+.kribseg .kribpn { font-size: 17px; font-weight: 700; opacity: .85; }
+.kribtotal { border-color: #8a6fd1; background: repeating-linear-gradient(90deg, #d9ccff 0 calc(100% / var(--units, 10)), #e9e1ff 0 calc(200% / var(--units, 10))); color: #3b2f5c; }
+.kribgap { visibility: hidden; }
+.kribbr { height: 44px; border: 3px dashed #8a6fd1; border-top: 0; border-radius: 0 0 26px 26px; background: rgba(255,255,255,.75); cursor: pointer;
+  font-family: var(--font); font-size: 24px; font-weight: 700; color: #5b4b8a; padding: 0; }
+.ktag { box-shadow: 0 0 0 5px rgba(138,111,209,.5); position: relative; }
+.ktag::after { content: '?'; position: absolute; top: -34px; left: 50%; transform: translateX(-50%); font-size: 30px; font-weight: 700; color: #fff; background: #8a6fd1; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+
+/* ---------------------------------------------------------- think-gate (fairy-dust fill), «Hjelp meg», fixed-slot keypad */
+.tray.kgate-wait .tray-in > *:not(.khelp) { opacity: .5; filter: saturate(.6); }
+.tray.kgate-fill .tray-in { position: relative; }
+.tray.kgate-fill .tray-in::after { content: ''; position: absolute; left: 14px; bottom: 6px; height: 7px; border-radius: 4px; width: 0;
+  background: linear-gradient(90deg, #fff4b0, #f5c542, #ffd6f0, #b9a5f0); box-shadow: 0 0 10px rgba(245,197,66,.8); animation: kgateFill var(--kgate, 1s) linear forwards; }
+.tray.kgate-fill .tray-in > * { opacity: .78; }
+@keyframes kgateFill { to { width: calc(100% - 28px); } }
+.kboard.kgate-wait { opacity: .6 !important; }
+.khelp { position: fixed; left: 18px; bottom: calc(var(--tray-h, 0px) + 64px); z-index: 19; height: 64px; padding: 0 20px 0 12px; border-radius: 32px; border: 3px solid #b9a5f0;
+  background: linear-gradient(#fff, #f3ecff); color: #5b4b8a; font-family: var(--font); font-weight: 700; font-size: 24px; display: flex; align-items: center; gap: 8px; cursor: pointer;
+  box-shadow: 0 5px 0 rgba(60,40,110,.15); opacity: 0; transform: translateY(10px); transition: opacity .3s, transform .3s; pointer-events: none; }
+.khelp.on { opacity: 1; transform: none; pointer-events: auto; }
+.khelp .kpuff { font-size: 32px; }
+.keypad.kfixed .okbtn:not(.off) { animation: glowp .9s ease-in-out infinite alternate; opacity: 1; }
+.kseagain { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%); font-size: 64px; z-index: 30; pointer-events: none; animation: kseeagain 1.4s ease-out forwards; }
+@keyframes kseeagain { 0% { opacity: 0; transform: translate(-50%, -30%) scale(.6); } 25% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } 100% { opacity: 0; transform: translate(-50%, -60%) scale(1); } }
+
+/* ribbons build step (+10 / +1 / −1) */
+.kribbon.kbuild { background: repeating-linear-gradient(90deg, #ffd27a 0 calc(100% / var(--units, 10)), #ffe3a8 0 calc(200% / var(--units, 10))); border-color: #c9962b; color: #6a4a10; }
+.kribbon.ksel { box-shadow: 0 0 0 5px rgba(138,111,209,.5); }
+.kribbon.kempty { min-width: 40px; background: rgba(255,255,255,.6); border-style: dashed; }
+
+/* gate bar for 3D-only answers (empty tray). v5 (playtest BUG 1+2): it sits ABOVE the subtitle bubble (#sub: bottom 136px·u, or the
+   tray height + 22 px) instead of behind it, shows empty while the prompt plays (.kwait) and pulses on an early tap (.knudge) */
+.kgatebar { position: fixed; left: 50%; bottom: calc(max(136px * var(--u, 1), var(--tray-h, 0px) + 22px) + 64px); width: 260px; height: 14px; margin-left: -130px; border-radius: 7px;
+  background: rgba(255,255,255,.78); z-index: 41; border: 2px solid rgba(201,150,43,.55);
+  box-shadow: 0 2px 8px rgba(60,40,110,.2); opacity: 0; pointer-events: none; transition: opacity .2s; overflow: hidden; }
+body.tray-on .kgatebar { bottom: calc(var(--tray-h, 0px) + 94px); }          /* the subtitle sits at tray-h + 22 px (task.css) */
+.kgatebar.on, .kgatebar.kwait { opacity: 1; }
+.kgatebar.knudge { animation: kgateNudge .5s ease-out; }
+@keyframes kgateNudge { 30% { transform: scale(1.12); box-shadow: 0 0 0 5px rgba(242,193,78,.55), 0 2px 8px rgba(60,40,110,.2); } }
+/* v5: tappable plaques of a 3D board (f_num boards, #nlabels) while the prompt plays / on an early tap: dimmed, then a soft gold glow */
+body.kgate-wait #nlabels .nlabel.click:not(.done) { opacity: .55; filter: saturate(.7); transition: opacity .25s; }
+#nlabels .nlabel.kwait-glow { animation: kwaitGlow 1.2s ease-in-out; opacity: 1; }
+@keyframes kwaitGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(242,193,78,0); } 40% { box-shadow: 0 0 0 6px rgba(242,193,78,.7), 0 0 26px rgba(242,193,78,.55); } }
+.kgatebar.on::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px;
+  background: linear-gradient(90deg, #fff4b0, #f5c542, #ffd6f0, #b9a5f0); animation: kgateFill2 var(--kgate, 1s) linear forwards; }
+@keyframes kgateFill2 { to { width: 100%; } }
+@media (max-height: 720px) { .kwheel { gap: 3px; } .kwbtn { height: 46px; } .kwdig { height: 48px; font-size: 40px; } }
+.karrow { position: absolute; top: -52px; transform: translateX(-50%); font-size: 40px; color: #d0428a; pointer-events: none; text-shadow: 0 2px 0 #fff; }
+.kface.kicon svg { width: calc(var(--kcard) - 30px); height: calc(var(--kcard) - 30px); }
+.ksmall .kface.kicon svg, .kcell .kface.kicon svg { width: 44px; height: 44px; }
+.khelp.on.kpulse { animation: glowp .9s ease-in-out infinite alternate; border-color: var(--gold2, #e0a91e); }
+/* v5r fix1 (review #8): her early choice stays visible – the chip she tapped during the prompt / the glitter fill wears a gold «valgt»
+   ring (full opacity even while the tray is dimmed); when the gate opens it pulses (prompt-time tap: «tap it again») */
+.tray .tray-in > .chip.kvalgt, .chip.kvalgt { opacity: 1 !important; filter: none !important; box-shadow: 0 0 0 4px #f7cf4d, 0 0 18px rgba(247,207,77,.75); }
+.chip.kvalgt.kpulse-v { animation: kvalgtPulse .8s ease-in-out 3; }
+@keyframes kvalgtPulse { 50% { box-shadow: 0 0 0 7px #f7cf4d, 0 0 28px rgba(247,207,77,.9); transform: scale(1.06); } }
+/* v5r2 (verify «early_tap»): 3D boards keep her early choice visible too – the board plaque she tapped during the prompt / the fill
+   wears the same gold «valgt» ring (full opacity while the other plaques are dimmed); no transform (the plaque is placed by one) */
+#nlabels .nlabel.kvalgt, body.kgate-wait #nlabels .nlabel.click.kvalgt:not(.done) { opacity: 1 !important; filter: none !important; box-shadow: 0 0 0 4px #f7cf4d, 0 0 18px rgba(247,207,77,.75); }
+#nlabels .nlabel.kvalgt.kpulse-v { animation: kvalgtPulseL .8s ease-in-out 3; }
+@keyframes kvalgtPulseL { 50% { box-shadow: 0 0 0 8px #f7cf4d, 0 0 30px rgba(247,207,77,.95); } }
+
+/* natural audit D6 (#41): «Fly videre» – a small cloud button near the fairy, outside the stage (stage.js flyButton / flyPlace). Always
+   there while a task runs; a tap (or Esc) leaves the task quietly. Soft, small, never over the board, the tray or the HUD. */
+.kfly { position: fixed; left: -400px; top: -400px; z-index: 19; display: flex; align-items: center; gap: 6px; height: 46px; padding: 0 16px 0 8px;
+  border-radius: 24px; border: 3px solid #cfe2f7; background: rgba(255, 255, 255, .92); color: #5b4c86; font-family: var(--font, 'Andika', sans-serif);
+  font-size: 20px; font-weight: 700; cursor: pointer; box-shadow: 0 3px 0 rgba(120, 150, 200, .3), 0 6px 16px rgba(60, 40, 110, .16);
+  opacity: 0; pointer-events: none; transition: opacity .3s; -webkit-tap-highlight-color: transparent; white-space: nowrap; }
+.kfly.on { opacity: .94; pointer-events: auto; }
+.kfly:hover { opacity: 1; }
+.kfly:active { transform: scale(.95); }
+.kfly svg { display: block; flex: none; }

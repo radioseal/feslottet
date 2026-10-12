@@ -1,0 +1,96 @@
+/* Feslottet – base UI styles */
+:root {
+  --ink: #3b2f5c; --ink2: #6b5d8f; --paper: #fffaf3; --card: #ffffff; --line: #eadff7;
+  --gold: #f5c542; --gold2: #e0a91e; --pink: #ff7fb0; --lilac: #b79cff; --mint: #6fd6a8; --sky: #7cc4f5; --red: #ef5b6a;
+  --ok: #3fbf72; --shadow: 0 6px 0 rgba(60, 40, 110, .18), 0 10px 24px rgba(60, 40, 110, .18);
+  --font: 'Andika', 'Avenir Next Rounded', 'Arial Rounded MT Bold', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #bfe8ff; font-family: var(--font); color: var(--ink); user-select: none; -webkit-user-select: none; }
+#view { position: fixed; inset: 0; }
+#view canvas { display: block; outline: none; }
+button { font-family: var(--font); }
+
+/* big kid buttons */
+.kbtn { font-size: 26px; font-weight: 700; color: var(--ink); background: var(--card); border: 3px solid var(--line); border-radius: 22px;
+  padding: 12px 22px; min-width: 64px; min-height: 64px; cursor: pointer; box-shadow: var(--shadow); transition: transform .08s, background .15s; }
+.kbtn:hover { transform: translateY(-2px); background: #fff6fb; }
+.kbtn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(60,40,110,.2); }
+.kbtn:disabled { opacity: .45; cursor: default; transform: none; }
+.kbtn.big { font-size: 36px; min-height: 84px; padding: 14px 34px; }
+.kbtn.gold { background: linear-gradient(#ffe27a, var(--gold)); border-color: var(--gold2); }
+.kbtn.pink { background: linear-gradient(#ffb3d1, var(--pink)); border-color: #e85d96; color: #fff; }
+.kbtn.mint { background: linear-gradient(#a6efcd, var(--mint)); border-color: #3fb986; }
+.kbtn.right { background: #d9f7e5 !important; border-color: var(--ok) !important; }
+.kbtn.wrong { background: #ffe0e4 !important; border-color: var(--red) !important; animation: shake .35s; }
+.kbtn.glow { animation: glow 1s ease-in-out infinite alternate; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+@keyframes glow { from { box-shadow: 0 0 0 4px rgba(245,197,66,.5), var(--shadow); } to { box-shadow: 0 0 0 12px rgba(245,197,66,.15), var(--shadow); } }
+
+/* modal panels */
+#panels { position: fixed; inset: 0; pointer-events: none; z-index: 20; }
+.panel-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: auto;
+  background: rgba(70, 50, 120, .18); opacity: 0; transition: opacity .2s; }
+.panel-wrap.on { opacity: 1; }
+.panel { position: relative; background: var(--paper); border: 4px solid #fff; border-radius: 34px; box-shadow: 0 18px 60px rgba(60,40,110,.35);
+  padding: 26px 30px; max-width: min(1100px, 94vw); max-height: 92vh; overflow: auto; transform: scale(.92); transition: transform .2s; }
+.panel-wrap.on .panel { transform: scale(1); }
+.panel-x { position: absolute; top: 10px; right: 10px; min-width: 52px; min-height: 52px; padding: 4px; font-size: 24px; border-radius: 50%; z-index: 2; }
+
+/* subtitles */
+#sub { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); max-width: 70vw; z-index: 40; pointer-events: none;
+  background: rgba(255,255,255,.94); color: var(--ink); font-size: 26px; padding: 10px 22px; border-radius: 20px; box-shadow: var(--shadow);
+  opacity: 0; transition: opacity .15s; text-align: center; }
+#sub.on { opacity: 1; }
+
+/* toasts */
+#toasts { position: fixed; top: 90px; left: 50%; transform: translateX(-50%); z-index: 45; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast { background: #fff; border-radius: 20px; padding: 10px 22px; font-size: 26px; box-shadow: var(--shadow); opacity: 0; transform: translateY(-10px); transition: all .25s; }
+.toast.on { opacity: 1; transform: none; }
+
+/* bubbles above 3D points */
+#bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 15; }
+.wbubble { position: absolute; transform: translate(-50%, -100%); background: #fff; border-radius: 18px; padding: 6px 14px; font-size: 22px;
+  box-shadow: 0 4px 12px rgba(60,40,110,.25); white-space: nowrap; transition: opacity .3s; }
+.wbubble::after { content: ''; position: absolute; left: 50%; bottom: -8px; margin-left: -8px; border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
+.wbubble.out { opacity: 0; }
+
+/* flying coins */
+.flycoin { position: fixed; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; z-index: 60; pointer-events: none;
+  background: radial-gradient(circle at 35% 35%, #fff2a8, var(--gold) 55%, var(--gold2)); border: 2px solid #c98f10; transition: left .65s ease-in, top .65s ease-in, opacity .65s; }
+
+/* numbers in a row must be clearly separated (parent rule) */
+.numrow { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+.numtile { min-width: 74px; padding: 8px 12px; font-size: 40px; font-weight: 700; text-align: center; background: #fff; border: 3px solid var(--line); border-radius: 16px; }
+.fxfloat { position: fixed; transform: translate(-50%, -50%); font-size: 30px; font-weight: 700; color: #fff; text-shadow: 0 2px 0 #c98f10, 0 0 8px rgba(0,0,0,.25); pointer-events: none; z-index: 30; }
+img.thumb { display: block; width: 100%; height: auto; pointer-events: none; }
+/* world labels (pinned to 3D points) */
+#labels { position: fixed; inset: 0; pointer-events: none; z-index: 12; }
+.wlabel { position: absolute; left: 0; top: 0; background: #fff; color: var(--ink); border-radius: 12px; padding: 2px 12px; font-size: 26px; font-weight: 700;
+  box-shadow: 0 3px 0 rgba(60,40,110,.18), 0 4px 10px rgba(60,40,110,.15); white-space: nowrap; will-change: transform; }
+.wlabel.click { pointer-events: auto; cursor: pointer; }
+.wlabel.k-num, .wlabel.k-price { font-size: 30px; min-width: 52px; text-align: center; background: #fffbe8; border: 2px solid var(--gold); }
+.wlabel.k-plaque { background: #fff6e8; border: 2px solid #e8cfa0; font-size: 24px; }
+.wlabel.k-note { background: #fffdf2; border: 2px dashed #e0c890; font-size: 28px; }
+/* v3 WP5: «try first, then hear it» world text (F.UI.tryRead) – stem bold, letters light while sounded out, whole-word glow */
+.tr-read .lch { display: inline-block; transition: transform .15s, color .15s; }
+.tr-read .lch.hl { color: #d0428a; transform: translateY(-4px) scale(1.15); }
+.tr-read .lch.hl2 { color: #2f9b5a; }
+.tr-read .lch.tr-stem { color: #b2346f; font-weight: 800; border-bottom: 3px solid rgba(208, 66, 138, .45); }
+.wlabel.tr-on { box-shadow: 0 0 0 3px rgba(255, 216, 74, .55), 0 3px 0 rgba(60,40,110,.18), 0 4px 10px rgba(60,40,110,.15); }
+.tr-glow { animation: trGlow 1.6s ease-in-out infinite; }
+@keyframes trGlow { 0%, 100% { box-shadow: 0 0 0 4px rgba(255, 216, 74, .35), 0 6px 14px rgba(90, 60, 20, .25); } 50% { box-shadow: 0 0 0 10px rgba(255, 216, 74, .75), 0 6px 18px rgba(90, 60, 20, .3); } }
+.tr-spark { position: fixed; width: 12px; height: 12px; margin: -6px 0 0 -6px; pointer-events: none; z-index: 40; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 30%, #ffd84a 45%, rgba(255, 216, 74, 0) 70%); animation: trSpark .9s ease-out forwards; }
+@keyframes trSpark { from { transform: scale(.4) translateY(0); opacity: 1; } to { transform: scale(1.4) translateY(-26px); opacity: 0; } }
+/* signpost arm plaques (Veiviser): one per arm, the picture-word stem bold, a small thumbnail/crest in front */
+.wlabel.k-plaque.vv-arm { font-size: 24px; display: flex; align-items: center; gap: 6px; padding: 2px 10px 2px 6px; }
+.wlabel.vv-arm img.vv-thumb, .wlabel.vv-arm .vv-thumb { width: 30px; height: 30px; flex: none; }
+.wlabel.vv-arm.vv-choice { box-shadow: 0 0 0 4px rgba(255, 216, 74, .8), 0 4px 10px rgba(60,40,110,.2); cursor: pointer; pointer-events: auto; }
+.wlabel.vv-arm.right { background: #e3f8e8; border-color: #3fae6a; box-shadow: 0 0 0 6px rgba(63, 174, 106, .55); }
+.wlabel.vv-arm.wrong { animation: vvShake .4s; }
+.wlabel.vv-arm.glow { animation: trGlow 1s ease-in-out infinite; }
+@keyframes vvShake { 0%, 100% { margin-left: 0; } 25% { margin-left: -8px; } 75% { margin-left: 8px; } }
+.wlabel.vv-arm[data-side="1"]::after, .wlabel.vv-arm[data-side="-1"]::before { content: ''; position: absolute; top: 50%; margin-top: -14px; border: 14px solid transparent; }
+.wlabel.vv-arm[data-side="1"]::after { right: -34px; border-left: 18px solid #d9a648; }
+.wlabel.vv-arm[data-side="-1"]::before { left: -34px; border-right: 18px solid #d9a648; }

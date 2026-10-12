@@ -1,0 +1,272 @@
+/* Feslottet – Ordstaven spell bar (FORMATS-W). Big letter slots, fairy-skinned tiles, on-screen keyboard, magical feedback. */
+.panel-wrap.wand-wrap { align-items: flex-end; background: linear-gradient(to top, rgba(70, 50, 120, .16), rgba(70, 50, 120, 0) 55%); }
+.panel-wrap.wand-wrap > .panel { background: transparent; border: 0; box-shadow: none; padding: 0 0 10px; overflow: visible; max-height: none; transform: translateY(40px); }
+.panel-wrap.wand-wrap.on > .panel { transform: none; }
+.panel-wrap.wand-wrap .panel-x { top: -8px; right: -8px; z-index: 5; }
+
+.wand-bar {
+  --sk1: #bfefff; --sk2: #d9ccff; --skg: rgba(120, 200, 255, .55); --tile1: #ffffff; --tile2: #bfe9ff; --tile3: #a9c9ff; --tileInk: #2f3f7a;
+  position: relative; width: min(1060px, 96vw); padding: 14px 20px 14px; border-radius: 36px 36px 28px 28px;
+  background: linear-gradient(170deg, rgba(255, 255, 255, .92), var(--sk1) 45%, var(--sk2));
+  border: 3px solid rgba(255, 255, 255, .95);
+  box-shadow: 0 0 0 7px var(--skg), 0 18px 50px rgba(60, 40, 110, .35);
+  overflow: hidden; font-family: var(--font); color: var(--ink);
+}
+/* slow shimmer + drifting sparkles: the bar is a little bit alive */
+.wand-bar::before { content: ''; position: absolute; inset: -40%; pointer-events: none; opacity: .55;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .75) 50%, transparent 60%); animation: wbShimmer 5.5s linear infinite; }
+.wand-bar::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .75;
+  background-image: radial-gradient(circle, #fff 0 2px, transparent 3px), radial-gradient(circle, #fff 0 1.5px, transparent 2.5px), radial-gradient(circle, rgba(255,255,255,.9) 0 2.5px, transparent 3.5px);
+  background-size: 190px 120px, 130px 90px, 260px 150px; background-position: 0 0, 40px 30px, 90px 60px; animation: wbTwinkle 9s linear infinite; }
+@keyframes wbShimmer { from { transform: translateX(-30%); } to { transform: translateX(30%); } }
+@keyframes wbTwinkle { from { background-position: 0 0, 40px 30px, 90px 60px; } to { background-position: 190px -120px, -90px 120px, 350px -90px; } }
+.wand-bar > * { position: relative; z-index: 1; }
+.wand-bar.skin-blomst { --sk1: #ffd6e8; --sk2: #c9f5df; --skg: rgba(255, 127, 176, .45); --tile1: #fff; --tile2: #ffc2dc; --tile3: #ff9cc6; --tileInk: #7a2350; }
+.wand-bar.skin-boble { --sk1: #cdf2ff; --sk2: #bdf3ec; --skg: rgba(92, 200, 192, .5); --tile1: #fff; --tile2: #d8f6ff; --tile3: #9ad6ff; --tileInk: #1f5a72; }
+.wand-bar.skin-stjerne { --sk1: #fff3b8; --sk2: #ffdcc8; --skg: rgba(245, 197, 66, .6); --tile1: #fffdf0; --tile2: #ffe98a; --tile3: #f5c542; --tileInk: #6b4a00; }
+
+.wb-top { display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 96px; }
+.wb-slots { display: flex; gap: 10px; flex-wrap: nowrap; justify-content: center; min-width: 260px; }
+.wb-slot { position: relative; width: 74px; height: 90px; border-radius: 20px; background: rgba(255, 255, 255, .9); border: 3px solid #fff;
+  box-shadow: inset 0 -5px 0 rgba(60, 40, 110, .08), 0 4px 0 rgba(60, 40, 110, .12); display: flex; align-items: center; justify-content: center;
+  font-size: 60px; font-weight: 700; line-height: 1; color: var(--ink); cursor: pointer; transition: transform .12s, background .2s; }
+.wb-slot.full { background: #fff; }
+.wb-slot.given { background: #fff7dc; color: #7a6a9a; cursor: default; }
+.wb-slot.dim { opacity: .35; }
+.wb-slot.caret { border-color: var(--skg); animation: wbCaret 1.1s ease-in-out infinite; }
+@keyframes wbCaret { 50% { box-shadow: 0 0 0 6px var(--skg), inset 0 -5px 0 rgba(60, 40, 110, .08); } }
+.wb-slot.ghost::before { content: attr(data-g); position: absolute; color: rgba(59, 47, 92, .2); font-size: 60px; font-weight: 700; }
+.wb-slot.pop { animation: wbPop .38s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes wbPop { 0% { transform: scale(1.55) rotate(-8deg); background: #fffbe0; box-shadow: 0 0 26px 10px var(--skg); } 100% { transform: none; } }
+.wb-slot.glowing { animation: wbGlow .9s ease-in-out infinite alternate; }
+.wb-slot.wrongslot { border-color: #ef5b6a; background: #fff0f2; }
+@keyframes wbGlow { from { box-shadow: 0 0 0 4px rgba(245, 197, 66, .6); } to { box-shadow: 0 0 0 12px rgba(245, 197, 66, .15); } }
+
+/* number slot (Tallmagi): a gold coin */
+.wb-num { width: 88px; height: 88px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 46px; font-weight: 700; color: #6b4a00;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .7), rgba(255, 242, 168, .55) 45%, rgba(245, 197, 66, .35)); border: 3px dashed rgba(201, 143, 16, .55); flex: none; }
+.wb-num.full { background: radial-gradient(circle at 35% 30%, #fff8c8, #f5c542 60%, #e0a91e); border: 3px solid #c98f10; box-shadow: 0 4px 0 rgba(160, 110, 0, .35); }
+.wb-num.pop { animation: wbPop .38s cubic-bezier(.3, 1.6, .5, 1); }
+
+/* picture of the wish (writing tasks) */
+.wb-pic { width: 112px; height: 112px; border-radius: 24px; background: #fff; border: 3px solid #fff; box-shadow: 0 4px 0 rgba(60, 40, 110, .15); padding: 6px; cursor: pointer; flex: none; }
+.wb-pic img.thumb { width: 100%; height: 100%; object-fit: contain; }
+
+.wb-side { display: flex; align-items: center; gap: 12px; margin-left: 6px; }
+/* cast button: a round star that glows gold as soon as the wand knows the word */
+.wb-go { position: relative; width: 112px; height: 112px; border-radius: 50%; border: 4px solid #fff; cursor: pointer; flex: none;
+  background: radial-gradient(circle at 40% 35%, #fff, var(--sk1) 60%, var(--sk2)); box-shadow: 0 6px 0 rgba(60, 40, 110, .2); opacity: .55; transition: opacity .2s, transform .1s; }
+.wb-go.can { opacity: 1; }
+.wb-go:active { transform: translateY(3px); }
+.wb-star { position: absolute; inset: 18px; background: linear-gradient(160deg, #fff6c8, #f5c542); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  filter: drop-shadow(0 2px 0 rgba(160, 110, 0, .4)); transition: transform .4s; }
+.wb-prev { position: absolute; inset: 14px; border-radius: 50%; background-size: contain; background-repeat: no-repeat; background-position: center; opacity: 0; transition: opacity .3s; }
+.wb-go.ready { background: radial-gradient(circle at 40% 35%, #fffbe0, #ffe27a 60%, #f5c542); animation: wbReady 1s ease-in-out infinite alternate; opacity: 1; }
+.wb-go.ready .wb-star { transform: scale(.42) translate(80%, -80%) rotate(30deg); }
+.wb-go.ready .wb-prev { opacity: 1; }
+@keyframes wbReady { from { box-shadow: 0 0 0 5px rgba(245, 197, 66, .7), 0 6px 0 rgba(160, 110, 0, .3); } to { box-shadow: 0 0 0 16px rgba(245, 197, 66, .1), 0 6px 0 rgba(160, 110, 0, .3); } }
+/* backspace: a soft arrow shape */
+.kbtn.wb-back { min-width: 84px; min-height: 66px; padding: 0; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+.wb-back-ico { width: 44px; height: 30px; background: #8a7bb8; clip-path: polygon(0 50%, 32% 0, 100% 0, 100% 100%, 32% 100%); }
+
+/* keyboard / tiles */
+.wb-bank { margin-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.has-tiles .wb-bank { flex-direction: row; justify-content: center; gap: 14px; flex-wrap: wrap; min-height: 92px; }
+.wb-krow { display: flex; gap: 6px; justify-content: center; }
+.wb-key { width: 66px; height: 58px; border-radius: 14px; border: 2px solid rgba(255, 255, 255, .95); background: rgba(255, 255, 255, .92); font-family: var(--font);
+  font-size: 30px; font-weight: 700; color: var(--ink); cursor: pointer; box-shadow: 0 3px 0 rgba(60, 40, 110, .18); padding: 0; transition: transform .06s; }
+.wb-key:active, .wb-key.hit { animation: wbHit .25s; }
+@keyframes wbHit { 30% { transform: translateY(3px) scale(.94); background: var(--sk1); } }
+.wb-key.dig { background: linear-gradient(#fffbe8, #ffefb0); color: #6b4a00; }
+.wb-key.glow, .wb-tile.glow { animation: wbGlow .8s ease-in-out infinite alternate; }
+.wb-tile { width: 82px; height: 90px; border-radius: 20px; border: 3px solid #fff; cursor: pointer; font-family: var(--font); font-size: 54px; font-weight: 700; color: var(--tileInk); padding: 0;
+  background: linear-gradient(160deg, var(--tile1), var(--tile2) 55%, var(--tile3)); box-shadow: 0 5px 0 rgba(60, 40, 110, .2), inset 0 2px 8px rgba(255, 255, 255, .8); transition: transform .1s, opacity .2s; }
+.wb-tile:active { transform: translateY(3px); }
+.wb-tile.used { opacity: .12; pointer-events: none; transform: scale(.85); }
+.skin-boble .wb-tile { border-radius: 50%; width: 90px; }
+.skin-stjerne .wb-tile { border-radius: 26px 26px 26px 6px; }
+.skin-blomst .wb-tile { border-radius: 40px 40px 14px 40px; }
+
+/* feedback */
+.wand-bar.ok { animation: wbOk .6s; }
+@keyframes wbOk { 30% { box-shadow: 0 0 0 16px rgba(255, 226, 122, .7), 0 18px 50px rgba(60, 40, 110, .35); } }
+.wand-bar.bad .wb-slots { animation: shake .35s; }
+.wand-bar.locked { pointer-events: none; }
+.wand-bar.locked .wb-bank { opacity: .6; }
+.shake { animation: shake .35s; }
+
+/* letters flying from the bar into the wand */
+.wb-fly { position: fixed; z-index: 80; pointer-events: none; display: flex; align-items: center; justify-content: center; border-radius: 20px; font-family: var(--font);
+  font-size: 58px; font-weight: 700; color: #3b2f5c; background: radial-gradient(circle, #fffef0, #ffe27a); box-shadow: 0 0 22px 8px rgba(255, 236, 150, .85);
+  will-change: transform, opacity; }
+
+/* the big total chip after Tallmagi */
+.wlabel.k-num.wand-total { font-size: 46px; padding: 2px 18px; background: linear-gradient(#fff8c8, #ffe27a); border: 3px solid #e0a91e; }
+
+/* reading/writing format helpers (f_read.js / f_write.js) */
+.rw-note { position: relative; background: #fffdf2; border: 3px dashed #e0c890; border-radius: 22px; padding: 14px 34px; font-size: 64px; font-weight: 700; color: var(--ink);
+  box-shadow: 0 8px 0 rgba(160, 120, 40, .15), 0 14px 30px rgba(60, 40, 110, .2); display: inline-flex; gap: 2px; cursor: pointer; transform: rotate(-2deg); }
+.rw-note .ch { display: inline-block; padding: 0 1px; border-radius: 10px; transition: background .15s, transform .15s; }
+.rw-note .ch.lit { background: #ffe27a; transform: translateY(-6px) scale(1.12); }
+.rw-note .ch.first { text-decoration: underline; text-decoration-color: #f5c542; text-decoration-thickness: 6px; }
+.rw-note .ch.hole { min-width: 44px; border-bottom: 5px solid #c9b07a; color: transparent; }
+.rw-note .ch.hole.filled { color: var(--ink); border-bottom-color: transparent; }
+.rw-note.big { font-size: 74px; }
+.rw-stage { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.rw-row { display: flex; gap: 18px; justify-content: center; align-items: center; flex-wrap: wrap; }
+.rw-choice { width: 150px; height: 150px; border-radius: 26px; background: #fff; border: 3px solid var(--line); box-shadow: var(--shadow); cursor: pointer; padding: 8px; }
+.rw-choice img.thumb { width: 100%; height: 100%; object-fit: contain; }
+.rw-choice.right { border-color: var(--ok); background: #e6fbef; }
+.rw-choice.wrong { border-color: var(--red); background: #fff0f2; animation: shake .35s; }
+.rw-choice.glow { animation: glow 1s ease-in-out infinite alternate; }
+.rw-wordchip { min-width: 150px; min-height: 96px; padding: 10px 26px; border-radius: 22px; background: #fff; border: 3px solid var(--line); box-shadow: var(--shadow);
+  font-size: 52px; font-weight: 700; color: var(--ink); cursor: pointer; font-family: var(--font); }
+.rw-wordchip.right { border-color: var(--ok); background: #e6fbef; }
+.rw-wordchip.wrong { border-color: var(--red); background: #fff0f2; animation: shake .35s; }
+.rw-wordchip.glow { animation: glow 1s ease-in-out infinite alternate; }
+.wlabel.rw-plaque { font-size: 34px; padding: 4px 18px; background: #fff8ec; border: 3px solid #e8cfa0; pointer-events: auto; cursor: pointer; }
+.wlabel.rw-plaque.right { background: #e6fbef; border-color: var(--ok); }
+.wlabel.rw-plaque.wrong { background: #fff0f2; border-color: var(--red); animation: shake .35s; }
+.wlabel.rw-plaque.glow { animation: glow 1s ease-in-out infinite alternate; }
+
+@media (max-height: 720px) {
+  .wand-bar { padding: 10px 16px 10px; }
+  .wb-top { min-height: 84px; }
+  .wb-slot { width: 64px; height: 78px; font-size: 52px; }
+  .wb-slot.ghost::before { font-size: 52px; }
+  .wb-key { width: 64px; height: 48px; font-size: 28px; }
+  .wb-go { width: 96px; height: 96px; }
+  .wb-num { width: 76px; height: 76px; font-size: 40px; }
+  .wb-pic { width: 96px; height: 96px; }
+  .wb-tile { width: 72px; height: 80px; font-size: 46px; }
+}
+
+/* in the task tray: compact (tray ≤ 200 px) */
+.wand-bar.in-tray { width: auto; min-width: 560px; padding: 8px 16px 10px; border-radius: 28px; box-shadow: 0 0 0 5px var(--skg), 0 10px 30px rgba(60, 40, 110, .25); }
+.wand-bar.in-tray .wb-top { min-height: 0; gap: 12px; }
+.wand-bar.in-tray .wb-slot { width: 62px; height: 74px; font-size: 50px; border-radius: 16px; }
+.wand-bar.in-tray .wb-slot.ghost::before { font-size: 50px; }
+.wand-bar.in-tray .wb-pic { width: 84px; height: 84px; border-radius: 18px; padding: 4px; }
+.wand-bar.in-tray .wb-go { width: 84px; height: 84px; }
+.wand-bar.in-tray .kbtn.wb-back { min-width: 70px; min-height: 56px; }
+.wand-bar.in-tray .wb-bank { margin-top: 8px; min-height: 0; gap: 12px; }
+.wand-bar.in-tray .wb-tile { width: 70px; height: 76px; font-size: 46px; }
+.skin-boble.in-tray .wb-tile { width: 76px; }
+@media (max-height: 720px) {
+  .wand-bar.in-tray .wb-slot { width: 56px; height: 66px; font-size: 44px; }
+  .wand-bar.in-tray .wb-tile { width: 64px; height: 68px; font-size: 40px; }
+  .wand-bar.in-tray .wb-pic, .wand-bar.in-tray .wb-go { width: 72px; height: 72px; }
+}
+/* hints from the stage protocol light slots (class hl) */
+.wb-slot.hl { color: #d0428a; transform: translateY(-5px) scale(1.08); box-shadow: 0 0 0 5px rgba(255, 180, 220, .8); }
+.wb-slot.ghost.gsol::before { color: rgba(208, 66, 138, .45); }
+/* F36: the letters are wooden blocks that fell off the sign */
+.wand-bar.blocks .wb-tile { background: linear-gradient(160deg, #ffe9c4, #f3c98a 60%, #d9a35e); color: #5a3a12; border-color: #fff3dc; border-radius: 14px;
+  box-shadow: 0 6px 0 #b07a3a, inset 0 2px 6px rgba(255, 255, 255, .7); }
+.wand-bar.blocks .wb-tile:nth-child(odd) { transform: rotate(-4deg); }
+.wand-bar.blocks .wb-tile:nth-child(even) { transform: rotate(3deg); }
+.wand-bar.blocks .wb-tile.used { transform: scale(.85); }
+/* reading notes: tap for lydering */
+.tnote.rw-tap { cursor: pointer; pointer-events: auto; animation: rwTap 1.4s ease-in-out infinite; }
+@keyframes rwTap { 50% { box-shadow: 0 0 0 10px rgba(255, 226, 122, .55), 0 10px 26px rgba(60, 40, 110, .2); } }
+.nletter.rw-hole { min-width: .6em; color: transparent !important; border-bottom: 5px solid #c9b07a; }
+.wlabel.rw-first::first-letter { color: #d0428a; font-size: 1.3em; }
+.wlabel.rw-signpop { font-size: 40px; animation: wbPop .5s cubic-bezier(.3, 1.6, .5, 1); }
+/* Bokstavbytte button: a picture of the thing she made – tap to change its word */
+.wb-swap { width: 84px; height: 84px; flex: none; border-radius: 22px; border: 3px solid #fff; background: #fff center / 82% no-repeat; cursor: pointer;
+  box-shadow: 0 4px 0 rgba(60, 40, 110, .15); position: relative; }
+.wb-swap::after { content: ''; position: absolute; right: -6px; bottom: -6px; width: 30px; height: 30px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff, #ffe27a); border: 2px solid #e0a91e; }
+.wb-swap.on { box-shadow: 0 0 0 6px rgba(255, 226, 122, .8), 0 4px 0 rgba(60, 40, 110, .15); }
+.wand-bar.swapping .wb-slot.full { background: #fffbe6; }
+.wb-slot.poof { transition: transform .45s ease-in, opacity .45s ease-in; transform: translateY(-40px) scale(.4) rotate(20deg); opacity: 0; }
+.wlabel.rw-plq { cursor: pointer; }
+.wlabel .lch { display: inline-block; transition: transform .15s, color .15s; }
+.wlabel .lch.hl { color: #d0428a; transform: translateY(-4px) scale(1.15); }
+
+/* indoors the dollhouse camera is fixed: the spell bar sits at the top so the floor (where things appear) stays visible */
+.panel-wrap.wand-wrap.top { align-items: flex-start; background: linear-gradient(to bottom, rgba(70, 50, 120, .14), rgba(70, 50, 120, 0) 55%); }
+.panel-wrap.wand-wrap.top > .panel { padding: 96px 0 0; transform: translateY(-40px); }
+.panel-wrap.wand-wrap.top.on > .panel { transform: none; }
+.panel-wrap.wand-wrap.top .panel-x { top: 88px; }
+
+/* ---- Wave 2: modifier words («stor rød kake»), space bar, compact slots, ghost help ---- */
+.wb-key.wb-space { width: 210px; background: linear-gradient(#ffffff, #eef6ff); position: relative; }
+.wb-key.wb-space::after { content: ''; position: absolute; left: 34px; right: 34px; bottom: 14px; height: 10px; border: 3px solid #b9aee0; border-top: 0; border-radius: 0 0 6px 6px; }
+.wb-slot.sp { width: 26px !important; background: transparent; border-color: transparent; box-shadow: none; }
+.wb-slot.sp.caret { width: 26px; }
+.wb-slots.many { gap: 6px; }
+.wb-slots.many .wb-slot:not(.sp) { width: 58px; height: 80px; font-size: 50px; border-radius: 16px; }
+.wb-slots.many .wb-slot.ghost::before { font-size: 50px; }
+.wb-slots.lots .wb-slot:not(.sp) { width: 46px; height: 70px; font-size: 40px; border-radius: 14px; }
+.wb-slots.lots .wb-slot.ghost::before { font-size: 40px; }
+/* ghost help: tapping a ghost letter plays its sound; the first wrong letter pulses */
+.wb-slot.ghost { cursor: pointer; }
+.wb-slot.gpulse { animation: wbGpulse .9s ease-out 2; }
+.wb-slot.gpulse::before { color: rgba(208, 66, 138, .75) !important; }
+@keyframes wbGpulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 140, 200, .9); } 40% { transform: scale(1.14) translateY(-6px); box-shadow: 0 0 0 14px rgba(255, 140, 200, .25); } 100% { transform: none; box-shadow: 0 0 0 0 rgba(255, 140, 200, 0); } }
+/* cast button previewing a change to an existing thing (a little magic swirl badge) */
+.wb-go.modp::after { content: ''; position: absolute; left: -6px; bottom: -6px; width: 36px; height: 36px; border-radius: 50%; border: 3px solid #fff;
+  background: conic-gradient(#ff7fb0, #ffd84a, #a6efcd, #9ad6ff, #c6a8ff, #ff7fb0); animation: wbSpin 2.4s linear infinite; }
+@keyframes wbSpin { to { transform: rotate(360deg); } }
+/* sleeping things breathe out «z», dancing things music notes */
+.fxfloat.wand-zzz { font-size: 34px; color: #b9a8ff; text-shadow: 0 2px 0 #6a58b8, 0 0 10px rgba(255, 255, 255, .8); font-style: italic; }
+.fxfloat.wand-note { font-size: 36px; color: #ff9cc6; text-shadow: 0 2px 0 #b03a78, 0 0 10px rgba(255, 255, 255, .8); }
+@media (max-height: 720px) {
+  .wb-key.wb-space { width: 180px; }
+  .wb-slots.many .wb-slot:not(.sp) { width: 52px; height: 70px; font-size: 44px; }
+}
+
+/* ---- Wave 2 delight pass (reading/writing formats) ---- */
+/* the wish as a big picture card at the bottom (picture → word): what is wanted, at a glance */
+.rw-wishcard { position: fixed; left: 50%; bottom: 14px; width: 168px; height: 168px; z-index: 17; border-radius: 50%; cursor: pointer;
+  transform: translateX(-50%) scale(.4); opacity: 0; transition: transform .45s cubic-bezier(.3, 1.5, .5, 1), opacity .3s;
+  background: radial-gradient(circle at 38% 30%, #ffffff, #f4fbff 55%, #dcefff); border: 5px solid #fff;
+  box-shadow: 0 0 0 7px rgba(150, 210, 255, .45), 0 12px 30px rgba(60, 40, 110, .3); display: flex; align-items: center; justify-content: center; }
+.rw-wishcard.on { transform: translateX(-50%) scale(1); opacity: 1; animation: rwWcBob 2.6s ease-in-out infinite .5s; }
+.rw-wishcard .rw-wc-img { width: 78%; height: 78%; object-fit: contain; filter: drop-shadow(0 6px 6px rgba(60, 40, 110, .25)); }
+.rw-wishcard .rw-wc-ring { position: absolute; inset: -12px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, rgba(255,255,255,0) 0 20%, rgba(255,255,255,.95) 25%, rgba(255,255,255,0) 30% 70%, rgba(255,240,170,.9) 75%, rgba(255,255,255,0) 80%);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 64%); mask: radial-gradient(circle, transparent 62%, #000 64%); animation: wbSpin 4s linear infinite; }
+.rw-wishcard.wob { animation: rwWcWob .5s; }
+.rw-wishcard.done { box-shadow: 0 0 0 10px rgba(255, 226, 122, .8), 0 12px 30px rgba(60, 40, 110, .3); transform: translateX(-50%) scale(1.08); }
+@keyframes rwWcBob { 50% { transform: translateX(-50%) translateY(-7px) scale(1); } }
+@keyframes rwWcWob { 25% { transform: translateX(-50%) rotate(-8deg) scale(1.06); } 75% { transform: translateX(-50%) rotate(8deg) scale(1.06); } }
+@media (max-height: 720px) { .rw-wishcard { width: 140px; height: 140px; bottom: 10px; } }
+/* bigger plaques on jars / books / doors / signs / bells; the chosen one turns green or shakes */
+.wlabel.rw-big { font-size: 36px; padding: 4px 16px; border-width: 3px; border-radius: 14px; box-shadow: 0 4px 0 rgba(160, 120, 40, .18); }
+.wlabel.rw-big.right { background: #e6fbef; border-color: var(--ok); animation: wbPop .5s cubic-bezier(.3, 1.6, .5, 1); box-shadow: 0 0 0 8px rgba(120, 220, 160, .35); }
+.wlabel.rw-big.wrong { background: #fff0f2; border-color: var(--red); animation: shake .35s; }
+@media (max-height: 720px) { .wlabel.rw-big { font-size: 30px; } }
+/* F29: the ringing word on a golden card */
+.tnote.rw-rhyme { background: linear-gradient(#fffbe6, #fff1b8); border-color: #e0a91e; cursor: pointer; }
+/* a letter placed in its right spot sparkles */
+.wb-slot.spark { animation: wbSpark .7s cubic-bezier(.3, 1.6, .5, 1); border-color: #ffe27a; }
+.wb-slot.spark::after { content: ''; position: absolute; inset: -18px; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, #fff 0 3px, transparent 4px) 12% 18% / 22px 22px no-repeat, radial-gradient(circle, #ffe27a 0 4px, transparent 5px) 86% 14% / 26px 26px no-repeat,
+    radial-gradient(circle, #fff 0 3px, transparent 4px) 90% 84% / 22px 22px no-repeat, radial-gradient(circle, #ffd0ea 0 4px, transparent 5px) 8% 88% / 26px 26px no-repeat;
+  animation: wbSparkle .8s ease-out; }
+@keyframes wbSpark { 0% { transform: scale(1.4); box-shadow: 0 0 22px 10px rgba(255, 226, 122, .9); } 100% { transform: none; } }
+@keyframes wbSparkle { 0% { opacity: 1; transform: scale(.6) rotate(0); } 100% { opacity: 0; transform: scale(1.3) rotate(25deg); } }
+/* F41: the right first letter drops into the hole */
+.tnote .nletter.rw-fillpop { animation: rwFill .6s cubic-bezier(.3, 1.6, .5, 1); color: #d0428a; }
+@keyframes rwFill { 0% { transform: translateY(-40px) scale(1.6); text-shadow: 0 0 18px #ffe27a; } 100% { transform: none; } }
+.wlabel.rw-big.rw-up { margin-top: -48px; }
+.wlabel.rw-big.rw-up::after { content: ''; position: absolute; left: 50%; bottom: -16px; width: 3px; height: 14px; margin-left: -1.5px; background: #e8cfa0; border-radius: 2px; }
+/* F29: the ringing word on a golden card at the bottom (tap = the bell rings and says it) */
+.rw-wordcard { position: fixed; left: 50%; bottom: 16px; z-index: 17; display: flex; align-items: center; gap: 16px; padding: 10px 34px 10px 20px; border-radius: 28px; cursor: pointer;
+  background: linear-gradient(#fffbe6, #ffeaa0); border: 4px solid #fff; box-shadow: 0 0 0 6px rgba(245, 197, 66, .55), 0 12px 28px rgba(60, 40, 110, .28);
+  font-family: var(--font); font-size: 64px; font-weight: 700; color: var(--ink); transform: translateX(-50%) scale(.4); opacity: 0;
+  transition: transform .45s cubic-bezier(.3, 1.5, .5, 1), opacity .3s; }
+.rw-wordcard.on { transform: translateX(-50%) scale(1); opacity: 1; }
+.rw-wordcard.wob { animation: rwWcWob .5s; }
+.rw-wordcard .rw-bell { width: 56px; height: 60px; background: linear-gradient(160deg, #fff6c8, #f5c542 55%, #d99a12);
+  clip-path: polygon(50% 0, 62% 6%, 70% 22%, 74% 52%, 92% 78%, 100% 86%, 0 86%, 8% 78%, 26% 52%, 30% 22%, 38% 6%); position: relative; transform-origin: 50% 0; animation: rwBell 2.4s ease-in-out infinite; }
+@keyframes rwBell { 0%, 70%, 100% { transform: rotate(0); } 76% { transform: rotate(14deg); } 84% { transform: rotate(-12deg); } 92% { transform: rotate(6deg); } }
+@media (max-height: 720px) { .rw-wordcard { font-size: 52px; padding: 8px 28px 8px 16px; } .rw-wordcard .rw-bell { width: 46px; height: 50px; } }
+.rw-wishcard.top, .rw-wordcard.top { bottom: auto; top: 96px; }
+/* reveal (fix wave): after a successful free cast the bar slides down to a small strip so the new thing is seen; it comes back by itself */
+.panel-wrap.wand-wrap.reveal { background: none; }
+.panel-wrap.wand-wrap > .panel { transition: transform .35s cubic-bezier(.3, .8, .3, 1); }
+.panel-wrap.wand-wrap.on.reveal > .panel { transform: translateY(calc(100% - 54px)); }
+.panel-wrap.wand-wrap.top.on.reveal > .panel { transform: translateY(calc(-100% + 54px + 96px)); }

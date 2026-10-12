@@ -1,0 +1,316 @@
+/* Feslottet – «Bli venn» encounter (Vennemåleren, Vennehjulet, vennebånd, sticker) and Vennealbumet (WP6 CATCH). */
+
+/* ---------- Vennemåleren: 20 hearts = two ten-frames with a gap */
+.bf-meter { position: fixed; left: 0; top: 0; z-index: 19; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 14px; background: rgba(255, 250, 243, .94); border: 3px solid #fff; border-radius: 26px; box-shadow: 0 8px 24px rgba(60, 40, 110, .22);
+  opacity: 0; transition: opacity .25s; }
+.bf-meter.on { opacity: 1; }
+.bf-meter.gone { opacity: 0 !important; transition: opacity .2s; }
+.bf-meter-head { height: 22px; display: flex; justify-content: center; }
+.bf-frames { display: flex; gap: 18px; }
+.bf-frame { display: grid; grid-template-columns: repeat(5, 30px); grid-auto-rows: 28px; gap: 4px; padding: 5px; border-radius: 12px; background: #f6eefc; box-shadow: inset 0 0 0 2px #e6d8f5; }
+.bf-slot { width: 30px; height: 28px; }
+.bf-slot svg, .bf-ring svg, .bf-fly.bf-heart svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.bf-slot path { fill: #fff; stroke: #d9c6ef; stroke-width: 1.6; }
+.bf-slot.on path { fill: #f7c63a; stroke: #d49a12; }
+.bf-slot.on.mercy path, .bf-slot.on.carry path { fill: #ffb3d1; stroke: #e46f9f; }   /* carry hearts («Den husker deg»): their own colour */
+/* v3 Venneprøven: n trial pips (paws) above the ten-frames – gold A, silver B, grey C; the current pip pulses; stretch pips wear a star */
+.bf-pips { display: flex; justify-content: center; gap: 8px; }
+.bf-pip { position: relative; width: 34px; height: 34px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2.5px #d9c6ef; color: #e3d6f3;
+  display: flex; align-items: center; justify-content: center; }
+.bf-pip .bf-paw { width: 22px; height: 22px; fill: currentColor; }
+.bf-pip-star { position: absolute; right: -7px; top: -7px; width: 18px; height: 18px; display: none; }
+.bf-pip-star svg { width: 100%; height: 100%; display: block; } .bf-pip-star path { fill: #ffd94a; stroke: #c98f10; stroke-width: 1.6; }
+.bf-pip.stretch { box-shadow: inset 0 0 0 2.5px #f0b01e, 0 0 0 2px #fff3c2; }
+.bf-pip.stretch .bf-pip-star { display: block; }
+.bf-pip.cur { animation: bfPipPulse .7s ease-in-out infinite alternate; box-shadow: inset 0 0 0 3px #a98be8; color: #c9b8ff; }
+.bf-pip.stretch.cur { box-shadow: inset 0 0 0 3px #f0b01e; }
+.bf-pip.oA { background: radial-gradient(circle at 35% 30%, #fff7c2, #ffd84a 55%, #e0a91e); box-shadow: none; color: #fff; }
+.bf-pip.oB { background: radial-gradient(circle at 35% 30%, #ffffff, #dfe3ea 55%, #aab2bf); box-shadow: none; color: #fff; }
+.bf-pip.oC { background: #e6e3ec; box-shadow: inset 0 0 0 2px #cfc9d9; color: #fff; }
+.bf-pip.pop { animation: bfPop .32s cubic-bezier(.3, 1.8, .5, 1); }
+@keyframes bfPipPulse { from { transform: scale(1); } to { transform: scale(1.18); } }
+.bf-meter.pips-only .bf-frame, .bf-meter.pips-only .bf-meter-n { display: none; }
+/* docked during a task (top-left under the purse): a small chip, never over the task stage */
+.bf-meter.docked .bf-frame, .bf-meter.docked .bf-meter-head { display: none; }
+.bf-meter.docked .bf-frames { gap: 8px; align-items: center; }
+.bf-meter.docked .bf-pip { width: 24px; height: 24px; } .bf-meter.docked .bf-pip .bf-paw { width: 15px; height: 15px; }
+.bf-meter.docked .bf-pips { gap: 5px; }
+.bf-meter.docked .bf-meter-pic { width: 36px; height: 36px; margin-right: 0; box-shadow: inset 0 0 0 2px #eadff7; }
+.bf-meter.docked .bf-meter-n { min-width: 34px; height: 34px; border-radius: 11px; border-width: 2px; font-size: 20px; }
+.bf-meter.pips-only .bf-frames { gap: 0; }
+.bf-meter.star { animation: bfGlow .8s ease-in-out infinite alternate; }
+.bf-slot.pop { animation: bfPop .32s cubic-bezier(.3, 1.8, .5, 1); }
+.bf-meter.all .bf-slot.on path { fill: #ffd94a; }
+.bf-meter.all { animation: bfGlow .8s ease-in-out infinite alternate; }
+@keyframes bfPop { from { transform: scale(.3); } to { transform: scale(1); } }
+@keyframes bfGlow { from { box-shadow: 0 0 0 4px rgba(255, 214, 74, .6), 0 8px 24px rgba(60, 40, 110, .22); } to { box-shadow: 0 0 0 16px rgba(255, 214, 74, .15), 0 8px 24px rgba(60, 40, 110, .22); } }
+.bf-gems { display: inline-flex; gap: 3px; height: 22px; }
+.bf-gems svg { width: 22px; height: 22px; }
+.bf-gems svg path:first-child { fill: #b79cff; stroke: #7a5cc7; stroke-width: 1.2; }
+.bf-gems svg path + path { stroke: #e9ddff; stroke-width: 1; }
+.bf-gems.legend svg path { fill: #ffd34d; stroke: #ef4d5a; stroke-width: 1.2; }
+
+/* flying things (hearts into the meter, the sticker into the album button) */
+.bf-fly { position: fixed; left: 0; top: 0; z-index: 46; pointer-events: none; }
+.bf-fly.bf-heart { width: 34px; height: 31px; filter: drop-shadow(0 2px 4px rgba(200, 140, 0, .5)); }
+.bf-fly.bf-heart path { fill: #ffd94a; stroke: #d49a12; stroke-width: 1.4; }
+.bf-sticker { width: 96px; height: 96px; border-radius: 50%; background: #fff; border: 5px solid #ffd94a; box-shadow: 0 6px 16px rgba(60, 40, 110, .3); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.bf-sticker img { width: 100%; height: 100%; object-fit: contain; }
+.bf-sticker svg { width: 60%; } .bf-sticker path { fill: #ff7fb0; }
+.bf-bump { animation: bfBump .6s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes bfBump { 0% { transform: scale(1); } 35% { transform: scale(1.25) rotate(-6deg); } 100% { transform: scale(1); } }
+
+/* ---------- Vennehjulet */
+.bf-wheel { position: fixed; inset: 0; z-index: 44; pointer-events: auto; background: radial-gradient(circle at 50% 46%, rgba(255, 250, 240, .55), rgba(70, 50, 120, .35));
+  opacity: 0; transition: opacity .3s; }
+.bf-wheel.on { opacity: 1; }
+.bf-ring { position: absolute; left: 0; top: 0; width: 46px; height: 42px; }
+.bf-ring path { fill: #fff; stroke: #cdb8ea; stroke-width: 1.6; }
+.bf-ring.gold path { fill: #f7c63a; stroke: #c98f10; }
+.bf-ring.hit { filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 10px #ffe680); }
+.bf-ring.win { animation: bfWin .5s ease-in-out 2 alternate; }
+.bf-ring.win path { fill: #ffe066; }
+.bf-ring.miss { animation: bfMiss .4s ease-in-out 2; }
+@keyframes bfWin { to { filter: drop-shadow(0 0 16px #ffe066) drop-shadow(0 0 30px #fff); } }
+@keyframes bfMiss { 25% { margin-left: -6px; } 75% { margin-left: 6px; } }
+.bf-star { position: absolute; left: 0; top: 0; width: 72px; height: 72px; pointer-events: none; filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 6px #ffd94a); }
+.bf-star svg { width: 100%; height: 100%; } .bf-star path { fill: rgba(255, 255, 255, .2); stroke: #fff; stroke-width: 2; }
+/* landed: the heart grows in front (its true colour shows), the star stays behind it as a golden halo */
+.bf-star.land { filter: drop-shadow(0 0 10px #fff); }
+.bf-star.land path { fill: rgba(255, 255, 255, .9); stroke: #e6dcf7; }
+.bf-wheel.won .bf-star.land { filter: drop-shadow(0 0 12px #fff) drop-shadow(0 0 14px #ffd94a); }
+.bf-wheel.won .bf-star.land path { fill: #ffec8c; stroke: #fff; }
+.bf-ring.miss path { stroke: #9f8bd0; stroke-width: 2.2; }
+.bf-wheel-mid { position: absolute; width: 190px; height: 190px; margin: -95px 0 0 -95px; border-radius: 50%; background: radial-gradient(circle, #fff 60%, #fff4d6);
+  box-shadow: 0 8px 26px rgba(60, 40, 110, .25); display: flex; align-items: center; justify-content: center; }
+.bf-wheel-mid img { width: 82%; height: 82%; object-fit: contain; }
+.bf-wheel-n { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); min-width: 60px; padding: 2px 12px; border-radius: 18px; background: #f7c63a;
+  border: 3px solid #fff; color: var(--ink); font-size: 32px; font-weight: 700; text-align: center; box-shadow: 0 4px 10px rgba(60, 40, 110, .25); }
+.bf-wheel.won .bf-wheel-mid { animation: bfJoy .5s ease-in-out 2 alternate; }
+@keyframes bfJoy { to { transform: scale(1.12) rotate(4deg); } }
+
+/* ---------- vennebånd (her fairy's colours) */
+.bf-ribbon { position: fixed; left: 50%; top: 40%; z-index: 43; pointer-events: none; transform: translate(-50%, -50%) scale(.2) rotate(-8deg); opacity: 0;
+  transition: transform .45s cubic-bezier(.3, 1.6, .5, 1), opacity .3s; }
+.bf-ribbon.on { transform: translate(-50%, -50%) scale(1) rotate(-3deg); opacity: 1; }
+.bf-rib-band { position: relative; display: flex; align-items: center; gap: 14px; padding: 10px 34px; background: linear-gradient(var(--c1), var(--c2)); color: #fff;
+  border-radius: 14px; box-shadow: 0 8px 22px rgba(60, 40, 110, .3); }
+.bf-rib-band::before, .bf-rib-band::after { content: ''; position: absolute; top: 14px; width: 34px; height: 100%; background: var(--c2); z-index: -1; }
+.bf-rib-band::before { left: -22px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 40% 50%); }
+.bf-rib-band::after { right: -22px; clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%); }
+.bf-rib-band svg { width: 38px; height: 35px; } .bf-rib-band path { fill: #fff; }
+.bf-rib-name { font-size: 64px; font-weight: 700; line-height: 1.05; text-shadow: 0 3px 0 rgba(60, 40, 110, .3); letter-spacing: .02em; }
+
+/* ---------- Vennealbumet: the book */
+.al-wrap .panel { width: min(1240px, 96vw); max-width: 96vw; height: min(740px, 95vh); max-height: 95vh; padding: 14px 20px 18px; overflow: hidden; box-sizing: border-box;
+  background: linear-gradient(90deg, #fff7ec, #fffdf8 6%, #fffdf8 94%, #fff7ec); border: 6px solid #ffd1e6; }
+.al-wrap .panel-x { top: 12px; right: 12px; }
+.al-book { position: relative; height: 100%; display: flex; flex-direction: column; gap: 10px; }
+.al-tabs { display: flex; gap: 8px; align-items: flex-end; padding-right: 70px; flex: none; }
+.al-tab { min-width: 64px; height: 66px; flex: 1 1 0; max-width: 84px; border: 3px solid #eadff7; border-radius: 18px 18px 10px 10px; background: #fff; color: var(--ink);
+  font-family: var(--font); font-size: 32px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 0 rgba(60, 40, 110, .12); transition: transform .12s; position: relative; padding: 0; }
+.al-tab:active { transform: scale(.95); }
+.al-tab.on { background: linear-gradient(#ffe27a, var(--gold)); border-color: var(--gold2); transform: translateY(-4px); }
+.al-tab.full::after { content: ''; position: absolute; top: -7px; right: -7px; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff7c2, #ffd84a 50%, #e0a91e); border: 2px solid #fff; }
+.al-tab-cover svg { width: 44px; height: 44px; display: block; margin: auto; }
+/* a page tab = its number + its found friends as a little ten-frame (the one page selector, on the cover and on every page) */
+.al-tab:not(.al-tab-cover) { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+.al-tab-n { line-height: 1; }
+.al-dots.tab { grid-template-columns: repeat(5, 8px); gap: 2px; padding: 3px; margin: 0; border-radius: 6px; box-shadow: inset 0 0 0 1.5px #e6d8f5; }
+.al-dots.tab i { width: 8px; height: 8px; box-shadow: inset 0 0 0 1.5px #d9c6ef; }
+.al-dots.tab i.on { box-shadow: none; }
+.al-tab.on .al-dots.tab { background: rgba(255, 255, 255, .7); }
+.al-body { flex: 1 1 auto; min-height: 0; position: relative; }
+.al-body.flip { animation: alFlip .28s ease-out; }
+@keyframes alFlip { from { opacity: .2; transform: perspective(900px) rotateY(-12deg) translateX(-18px); } to { opacity: 1; transform: none; } }
+
+/* page */
+.al-page { height: 100%; display: flex; flex-direction: column; gap: 10px; border-radius: 24px; padding: 4px; }
+.al-page.full { box-shadow: inset 0 0 0 6px #ffd94a, inset 0 0 26px rgba(255, 210, 60, .5); padding: 10px; }
+.al-head { display: flex; align-items: center; gap: 16px; flex: none; height: 84px; }
+.al-num { min-width: 92px; height: 78px; border-radius: 20px; background: linear-gradient(#ffe27a, var(--gold)); border: 3px solid var(--gold2); font-size: 52px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow); }
+.al-pname { display: flex; align-items: center; gap: 10px; height: 72px; padding: 0 22px 0 14px; border-radius: 22px; border: 3px solid #eadff7; background: #fff; font-family: var(--font);
+  font-size: 36px; font-weight: 700; color: var(--ink); cursor: pointer; box-shadow: var(--shadow); }
+.al-pname svg, .al-today-h svg { width: 34px; height: 34px; color: var(--ink2); }
+.al-hab { width: 168px; height: 84px; border-radius: 16px; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(60, 40, 110, .15); }
+.al-dots { display: grid; grid-template-columns: repeat(5, 20px); gap: 5px; padding: 8px; border-radius: 14px; background: #f6eefc; box-shadow: inset 0 0 0 2px #e6d8f5; margin-left: auto; margin-right: 6px; }
+.al-dots i { width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px #d9c6ef; }
+.al-dots i.on { background: radial-gradient(circle at 35% 30%, #fff7c2, #ffd84a 50%, #e0a91e); box-shadow: none; }
+.al-dots.small { grid-template-columns: repeat(5, 10px); gap: 3px; padding: 4px; margin: 0; }
+.al-dots.small i { width: 10px; height: 10px; }
+.al-grid { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr); gap: 14px; padding: 12px;
+  border-radius: 22px; background: #f3eafc; box-shadow: inset 0 0 0 3px #e6d8f5; }
+
+/* cards */
+.al-card { position: relative; border-radius: 20px; background: #fff; border: 4px solid #eadff7; box-shadow: 0 5px 0 rgba(60, 40, 110, .12); cursor: pointer; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-height: 0; transition: transform .12s; }
+.al-card:active { transform: scale(.96); }
+.al-card.tap { animation: alTap .3s ease-out; }
+@keyframes alTap { 40% { transform: scale(1.05); } }
+.al-pic { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; padding: 6px; box-sizing: border-box; }
+.al-pic img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.al-name { flex: none; font-size: 34px; font-weight: 700; line-height: 1.1; padding: 0 6px 8px; color: var(--ink); text-align: center; word-break: break-word; }
+.al-card.found.t2 { border-color: #c9b8ff; }
+.al-card.found.t3 { border-color: #9fd8ff; background: linear-gradient(160deg, #fff, #eef8ff); }
+.al-card.t4.found { border: 5px solid transparent; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #ef4d5a, #ffb347, #ffd34d, #5cc46b, #56b6f0, #b79cff) border-box; }
+.al-card .al-gems { position: absolute; top: 6px; right: 8px; }
+.al-card.unfound { background: #f7f1fd; border-style: dashed; border-color: #d9c6ef; }
+.al-card.unfound .al-pic img { filter: brightness(0) saturate(0); opacity: .16; }
+/* WP5 silhouette: a lilac side profile with a light outline, so the shape reads (legs, ears, tail, beak) */
+.al-card.unfound .al-pic.sil { filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 3px 0 rgba(120, 90, 180, .16)); }
+.al-card.unfound .al-pic.sil img { filter: none; opacity: .95; }
+.al-card.unfound .al-pic.shade { filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 3px 0 rgba(120, 90, 180, .16)); }
+.al-card.unfound .al-pic.shade img { filter: grayscale(1) sepia(1) hue-rotate(218deg) saturate(1.4) brightness(1.18) contrast(.72); opacity: .92; }
+.al-card.unfound.t4 { border-color: #f0c0d8; }
+.al-q { position: absolute; top: 8px; left: 12px; font-size: 30px; font-weight: 700; color: #cdb8ea; }
+.al-hints { flex: none; display: flex; gap: 6px; padding: 0 6px 8px; }
+.al-hint { width: 40px; height: 40px; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 rgba(60, 40, 110, .1); display: flex; align-items: center; justify-content: center; }
+.al-hint svg { width: 32px; height: 32px; }
+.al-card.today { box-shadow: 0 0 0 4px #ffd94a, 0 0 22px 6px rgba(255, 210, 60, .7); animation: alToday 1.4s ease-in-out infinite alternate; }
+@keyframes alToday { to { box-shadow: 0 0 0 4px #ffd94a, 0 0 34px 12px rgba(255, 210, 60, .35); } }
+.al-ribbon { position: absolute; top: 10px; right: -26px; width: 100px; height: 26px; transform: rotate(38deg); background: linear-gradient(#ff9cc8, #ff6fa8); color: #fff;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(60, 40, 110, .25); }
+.al-ribbon svg { width: 20px; height: 20px; }
+.al-compbadge { position: absolute; top: 6px; left: 8px; width: 40px; height: 40px; border-radius: 50%; background: var(--mint); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 0 rgba(60, 40, 110, .15); }
+.al-compbadge svg { width: 26px; height: 26px; }
+
+/* the big card (a found friend, lifted) */
+.al-bigwrap { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; background: rgba(255, 250, 243, .7); border-radius: 26px;
+  opacity: 0; transition: opacity .18s; }
+.al-bigwrap.on { opacity: 1; }
+.al-bigcard { position: relative; width: min(440px, 80%); height: min(560px, 92%); border-radius: 30px; background: #fff; border: 5px solid #eadff7; box-shadow: 0 16px 40px rgba(60, 40, 110, .3);
+  display: flex; flex-direction: column; align-items: center; padding: 14px 18px 18px; box-sizing: border-box; transform: scale(.85); transition: transform .2s cubic-bezier(.3, 1.6, .5, 1); }
+.al-bigwrap.on .al-bigcard { transform: scale(1); }
+.al-bigcard.t4 { border: 6px solid transparent; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #ef4d5a, #ffb347, #ffd34d, #5cc46b, #56b6f0, #b79cff) border-box; }
+.al-bigcard .al-gems { position: absolute; top: 12px; right: 14px; }
+.al-bigpic { flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.al-bigpic img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.al-bigname { font-size: 72px; font-weight: 700; line-height: 1.1; margin: 4px 0 12px; cursor: pointer; }
+.al-follow { display: flex; align-items: center; gap: 12px; min-height: 96px; padding: 0 34px; border-radius: 30px; border: 4px solid #3fb986; background: linear-gradient(#a6efcd, var(--mint));
+  color: #fff; font-family: var(--font); font-size: 36px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow); text-shadow: 0 2px 0 rgba(30, 110, 70, .4); }
+.al-follow svg { width: 56px; height: 56px; color: #fff; }
+.al-follow.home { border-color: #c98f10; background: linear-gradient(#ffe27a, var(--gold)); color: var(--ink); text-shadow: none; }
+.al-follow.home svg { color: var(--ink); }
+.al-follow:active { transform: scale(.96); }
+
+/* cover */
+.al-cover { height: 100%; display: grid; grid-template-columns: 1.1fr 1fr; grid-template-rows: minmax(0, 1fr); gap: 14px; }
+.al-cover-l { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.al-title { display: flex; align-items: center; gap: 12px; font-size: 40px; font-weight: 700; color: var(--ink); }
+.al-title svg { width: 64px; height: 64px; }
+.al-count { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-radius: 26px; background: #f3eafc;
+  box-shadow: inset 0 0 0 3px #e6d8f5; cursor: pointer; padding: 14px; }
+.al-rods { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; justify-content: center; max-height: 260px; overflow: hidden; }
+.al-rod { display: grid; grid-template-rows: repeat(10, 18px); gap: 2px; padding: 3px; border-radius: 6px; background: #e0a91e; }
+.al-rod i, .al-cubes i { display: block; width: 18px; height: 18px; border-radius: 4px; background: radial-gradient(circle at 35% 30%, #fff7c2, #ffd84a 60%); }
+.al-cubes { display: grid; grid-template-columns: repeat(2, 18px); gap: 6px; align-self: flex-end; }
+.al-cubes i { box-shadow: 0 0 0 3px #e0a91e; }
+.al-count-n { font-size: 64px; font-weight: 700; color: var(--ink); line-height: 1; padding: 4px 22px; background: #fff; border-radius: 20px; border: 3px solid var(--gold); }
+.al-cover-r { display: flex; gap: 14px; min-height: 0; justify-content: center; }
+.al-today, .al-compbox { display: flex; flex-direction: column; gap: 8px; align-items: center; min-height: 0; flex: 1 1 0; max-width: 300px; }
+.al-today-h { display: flex; align-items: center; gap: 8px; font-size: 26px; font-weight: 700; color: var(--ink2); }
+.al-today .al-card, .al-compbox .al-card { width: 100%; flex: 1 1 auto; max-height: 360px; }
+.al-compslot { justify-content: center; border-style: dashed; border-color: #d9c6ef; background: #f7f1fd; color: #d4c2ee; }
+.al-compslot svg { width: 46%; height: auto; max-height: 60%; }
+.al-rod.ghost { background: transparent; box-shadow: inset 0 0 0 3px #d9c6ef; }
+.al-rod.ghost i { background: #fff; box-shadow: inset 0 0 0 2px #e6d8f5; }
+.al-rods:has(.ghost) { align-items: center; gap: 18px; }
+.al-zero svg { width: 90px; height: 90px; color: #d9c6ef; }
+
+@media (max-height: 720px) {
+  .al-tab { height: 60px; font-size: 28px; }
+  .al-head { height: 72px; } .al-num { height: 68px; min-width: 80px; font-size: 44px; } .al-pname { height: 64px; font-size: 32px; }
+  .al-hab { width: 140px; height: 70px; } .al-name { font-size: 30px; } .al-hint { width: 36px; height: 36px; } .al-hint svg { width: 28px; height: 28px; }
+}
+.bf-meter-pic { width: 62px; height: 62px; flex: none; align-self: center; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 3px #eadff7; overflow: hidden; margin-right: -6px; }
+.bf-meter-pic img { width: 100%; height: 100%; object-fit: contain; }
+.bf-meter.shake .bf-frames { animation: bfMiss .35s ease-in-out 2; }
+.al-name.l2 { font-size: 28px; } .al-name.l3 { font-size: 23px; } .al-name.l4 { font-size: 19px; }
+.al-bigname.l2 { font-size: 58px; } .al-bigname.l3 { font-size: 46px; } .al-bigname.l4 { font-size: 38px; }
+.al-name, .al-bigname { white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: clip; }
+
+/* fallback HUD button (WP10 owns the real one: .hud-album) */
+#hud .al-hudbtn { top: calc(14px * var(--u)); right: calc(112px * var(--u)); width: calc(86px * var(--u)); height: calc(86px * var(--u)); border-radius: calc(26px * var(--u));
+  background: linear-gradient(160deg, #fff, #ffe9f3); border: calc(4px * var(--u)) solid #fff; padding: calc(9px * var(--u)); box-sizing: border-box;
+  box-shadow: 0 calc(5px * var(--u)) 0 rgba(200, 90, 140, .22), 0 calc(10px * var(--u)) calc(24px * var(--u)) rgba(60, 40, 110, .2); transition: transform .12s; }
+#hud .al-hudbtn:hover { transform: translateY(-2px) rotate(2deg); }
+#hud .al-hudbtn:active { transform: scale(.94); }
+#hud .al-hudbtn svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.al-new { animation: alNew 1s ease-in-out 4; }
+@keyframes alNew { 50% { box-shadow: 0 0 0 calc(8px * var(--u)) rgba(255, 214, 74, .7), 0 0 calc(30px * var(--u)) rgba(255, 214, 74, .8); transform: scale(1.08); } }
+.bf-meter-n { align-self: center; min-width: 52px; height: 52px; border-radius: 16px; background: #fff; border: 3px solid #f7c63a; color: var(--ink); font-size: 32px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; margin-left: -4px; }
+.bf-meter-n.pop { animation: bfPop .3s cubic-bezier(.3, 1.8, .5, 1); }
+.al-rod.hi { background: #ff9cc8; transform: translateY(-6px); transition: transform .15s; }
+.al-rod.hi i, .al-cubes i.hi { background: radial-gradient(circle at 35% 30%, #fff, #ffe680 60%); }
+.al-cubes i.hi { transform: scale(1.25); transition: transform .15s; }
+.al-card.new { animation: alNewCard 1.1s ease-in-out 3; }
+@keyframes alNewCard { 50% { box-shadow: 0 0 0 5px #ffd94a, 0 0 30px 10px rgba(255, 214, 74, .75); transform: scale(1.04); } }
+.al-newstar { position: absolute; top: 4px; left: 6px; width: 44px; height: 44px; animation: alSpin 2.4s linear infinite; filter: drop-shadow(0 0 6px #ffe680); }
+.al-newstar svg { width: 100%; height: 100%; } .al-newstar path { fill: #ffd94a; stroke: #e0a91e; stroke-width: 1.2; }
+@keyframes alSpin { to { transform: rotate(360deg); } }
+
+/* v3 Vennestjerne: friend stars on the card (gold frame at 3) and on the big card; Navnelappen: her own name tag */
+.al-stars { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; z-index: 1; }
+.al-stars svg { width: 22px; height: 22px; } .al-stars path { fill: #ffd94a; stroke: #c98f10; stroke-width: 1.4; }
+/* v5c WP-A2: one star row per card – three slots on every found card; empty slots are faint outlines */
+.al-stars span { display: block; width: 22px; height: 22px; } .al-stars span svg { display: block; }
+.al-stars span.off path { fill: rgba(255, 255, 255, .78); stroke: #d9c6ef; stroke-width: 1.6; }
+.al-stars.none { opacity: .8; }
+.al-bigstars { cursor: pointer; }
+.al-card.found.gold { border: 5px solid #f0b01e; box-shadow: 0 0 0 3px #fff3c2, 0 0 18px 4px rgba(255, 210, 60, .55); }
+.al-card.named .al-name { text-decoration: underline 3px #c9b8ff; text-underline-offset: 6px; }
+.al-bigstars { display: flex; gap: 8px; justify-content: center; }
+.al-bigstars span { width: 40px; height: 40px; } .al-bigstars svg { width: 100%; height: 100%; display: block; }
+.al-bigstars path { fill: #fff; stroke: #d9c6ef; stroke-width: 1.6; } .al-bigstars .on path { fill: #ffd94a; stroke: #c98f10; }
+.al-bigcard.gold { box-shadow: 0 0 0 6px #ffd94a, 0 0 30px 8px rgba(255, 210, 60, .6); }
+
+/* v5 WP-A: the fact card beside the big card (DESIGN5 §2.4) – 2–3 facts with fact stars, the animal's word / expression */
+.al-bigcard.facts { width: min(860px, 94%); flex-direction: row; align-items: stretch; gap: 16px; }
+.al-bigleft { flex: 0 0 46%; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+.al-factcard { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 6px 4px 4px 14px; border-left: 3px dashed #eadff7; overflow-y: auto; }
+.al-fhead { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 700; color: #6b5d8f; }
+.al-fhead svg { width: 40px; height: 40px; }
+.al-fact { display: flex; align-items: center; gap: 10px; min-height: 72px; padding: 8px 12px; border-radius: 18px; background: #faf6ff; border: 3px solid #eadff7; cursor: pointer; }
+.al-fact.gold { border-color: #ffd94a; background: #fffbe6; }
+.al-fact.tap { animation: alFactTap .35s; }
+@keyframes alFactTap { 50% { transform: scale(.97); } }
+.al-ftext { flex: 1 1 auto; font-size: 21px; line-height: 1.25; color: var(--ink, #3b2f5c); }
+.al-fspk { flex: 0 0 auto; width: 40px; height: 40px; color: #9b86c9; } .al-fspk svg { width: 100%; height: 100%; }
+.al-fstars { flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; } .al-fstars i, .al-fstars.one { display: block; width: 22px; height: 22px; }
+.al-fstars svg { width: 100%; height: 100%; display: block; }
+.al-fstars path { fill: #fff; stroke: #d9c6ef; stroke-width: 1.8; }
+.al-fstars i.heard path, .al-fstars.one.on path { fill: #e6dcff; stroke: #b9a6e6; }
+.al-fstars i.on path { fill: #ffd94a; stroke: #c98f10; }
+.al-fstars.gold i path { fill: #ffc21a; stroke: #b07800; }
+.al-word { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 72px; padding: 8px 16px; border-radius: 22px; cursor: pointer;
+  background: linear-gradient(#fff2c4, #ffe27a); border: 3px solid #e8b923; }
+.al-word.ux { background: linear-gradient(#d9f4ff, #a9e1ff); border-color: #56b6f0; }
+/* v5c WP-A2: fact marks (no stars on facts: the card has one star row) and «?» rows that teach the next fact / word */
+.al-fmark { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 5px;
+  box-sizing: border-box; background: #fff; border: 3px solid #e3d8f6; color: #b9a6e6; font-size: 24px; font-weight: 700; line-height: 1; }
+.al-fmark svg { width: 100%; height: 100%; display: block; }
+.al-fmark.heard { color: #9b86c9; border-color: #d9c6ef; }
+.al-fmark.ok { color: #fff; background: #5cc46b; border-color: #3f9c4d; }
+.al-fmark.gold { color: #fff; background: #f0b01e; border-color: #c98f10; box-shadow: 0 0 10px 2px rgba(255, 210, 60, .6); }
+.al-fmark.q { color: #8f7bff; border-color: #c9b8ff; background: #f3eeff; }
+.al-fact.unknown, .al-word.unknown { background: repeating-linear-gradient(135deg, #f7f2ff 0 12px, #efe6ff 12px 24px); border-style: dashed; border-color: #cdb9f3; }
+.al-ftext.q, .al-wtext.q { color: #c3aee8; } .al-ftext.q svg, .al-wtext.q svg { width: 46px; height: 22px; display: block; }
+.al-word.unknown .al-fspk, .al-fact.unknown .al-fspk { color: #b9a6e6; }
+.al-word .al-fmark { margin-left: auto; }
+.al-word.unknown { justify-content: flex-start; } .al-word.unknown .al-fmark { margin-left: 0; } .al-word.unknown .al-wtext { flex: 1 1 auto; }
+.al-wtext { font-size: 30px; font-weight: 700; color: var(--ink, #3b2f5c); }
+@media (max-width: 760px) { .al-bigcard.facts { flex-direction: column; overflow-y: auto; } .al-bigleft { flex: 0 0 auto; } .al-factcard { border-left: 0; border-top: 3px dashed #eadff7; padding: 10px 0 0; } .al-bigpic { min-height: 160px; } }
+/* v5 WP-A: page numbers are 1–11 now (mostly one digit) – on narrow screens the 12 tabs shrink instead of running under the close button */
+@media (max-width: 900px) { .al-tab { min-width: 44px; } .al-tabs { gap: 5px; padding-right: 62px; } }
+/* v5c WP-A2: a friend away for the winter (on its journey south / asleep): a badge, the picture a little faded */
+.al-away { position: absolute; top: 8px; left: 8px; width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid #e3d8f6; padding: 3px; box-sizing: border-box; z-index: 2; }
+.al-away svg { width: 100%; height: 100%; display: block; }
+.al-card.found.away .al-pic img { opacity: .6; filter: saturate(.7); }
+/* v5c WP-A2: a friend with a question ready today – its next star slot pulses gold (go and play with it) */
+.al-stars span.next path, .al-bigstars span.next path { fill: #fff3b0; stroke: #e8b923; }
+.al-stars span.next, .al-bigstars span.next { animation: alStarAsk 1.4s ease-in-out infinite; transform-origin: 50% 55%; }
+@keyframes alStarAsk { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.28); } }
+@media (prefers-reduced-motion: reduce) { .al-stars span.next, .al-bigstars span.next { animation: none; } }
