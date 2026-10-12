@@ -30,8 +30,9 @@ def _azure_env():
 AZ_KEY, AZ_REGION = (None, None) if EDGE else _azure_env()
 if not EDGE and not (AZ_KEY and AZ_REGION): sys.exit('No Azure key: set AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (or use --edge for personal use)')
 BACKEND = 'edge' if EDGE else 'az1'
-# parent 12.10.: Iselin says single words and short exclamations better (Hurra, sau); Pernille stays for sentences
+# parent 12.10.: Pernille is the trustworthy voice everywhere; ONLY «Hurra» and «sau» sounded better with Iselin (listened to)
 SHORT_VOICE = 'nb-NO-IselinNeural'
+ISELIN_ONLY = re.compile(r'(?i)^\s*(hurra|sau)[\s.!?]*$')
 
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); AUD = os.path.join(ROOT, 'audio')
 FF = '/opt/homebrew/bin/ffmpeg' if os.path.exists('/opt/homebrew/bin/ffmpeg') else (shutil.which('ffmpeg') or 'ffmpeg')
@@ -65,11 +66,11 @@ def key(v, t): return (v + '|' + t) if v else t
 def nwords(t): return len(re.sub(r'[^\wæøåÆØÅ\s-]', ' ', t).split())
 def spec(v, t=None):
     s = VOICES.get(v, VOICES[''])
-    if not EDGE and v == '' and t is not None and 0 < nwords(t) <= 3: s = dict(s, voice=SHORT_VOICE)
+    if not EDGE and v == '' and t is not None and ISELIN_ONLY.match(t): s = dict(s, voice=SHORT_VOICE)
     return s
 def prosody(v, t):
     s = spec(v, t); rate, pitch = s['rate'], s['pitch']
-    if EDGE and v == '' and re.fullmatch(r'[A-ZÆØÅa-zæøå]+[.!?]?', t): rate = '-18%'   # single words: slower and clear
+    if v == '' and re.fullmatch(r'[A-ZÆØÅa-zæøå]+[.!?]?', t) and not ISELIN_ONLY.match(t): rate = '-18%'   # single words: slower and clear (Pernille, as before)
     return rate, pitch
 def needs_carrier(v, t):
     if not EDGE or 'Multilingual' not in spec(v)['voice']: return False
