@@ -1,11 +1,11 @@
 # Third-party notices
 
-| Component | Where | License |
+| Component | Where | License / terms |
 |---|---|---|
 | three.js r137 | `js/three.min.js` | MIT – Copyright 2010-2022 Three.js Authors (header kept in the file) |
 | Andika font | embedded (base64) in `css/` | SIL Open Font License 1.1 – Copyright SIL International. Full text: https://openfontlicense.org |
+| Speech audio (`audio/*.mp3`) | generated | Synthesized with **Microsoft Azure AI Speech** (prebuilt neural voices nb-NO Pernille, Iselin and Finn) from this project's own text. Microsoft does not claim the output of prebuilt voices made from your own content; it may be used in applications. |
+| Letter sounds (`audio/ls/*.mp3`) | derived | Cut and shaped by a measurement pipeline (not included) from carrier words synthesized with the same Azure voices. |
 
-**Speech audio is NOT included.** The game's spoken lines and letter sounds were generated with Microsoft Edge's
-read-aloud voices (nb-NO Pernille / Finn) through the open-source `edge-tts` tool. There is no licence that allows
-redistributing those recordings, so they are not part of this repository. You can generate them locally for your own use
-(see README) – check Microsoft's terms for the online service yourself. Openly licensed Norwegian voices are planned.
+The game code and data are MIT (see `LICENSE`). The audio files are offered under the same MIT terms as far as this project
+holds rights in them; the voices themselves are Microsoft's.

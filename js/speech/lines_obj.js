@@ -84,7 +84,7 @@ A({
   obj_vindfloy: ['Vinden snur hanen!'], obj_vindfloy_2: ['Kykeliky!'],
   obj_blomsterskremsel: ['Fuglene er venner med fugleskremselet!'], obj_blomsterskremsel_2: ['Fugleskremselet danser!'], obj_blomsterskremsel_3: ['Det vokser blomster!'],
   obj_togbane: ['Tut tut! Toget kjører rundt.'], obj_togbane_2: ['Fort, fort, lille tog!'],
-  obj_dukketeater: ['Ta-da! Takk for i dag!', 'Kaninen og katten bukker!'], obj_dukketeater_2: ['Kaninen og katten danser!'],
+  obj_dukketeater: ['Takk for i dag!', 'Kaninen og katten bukker!'], obj_dukketeater_2: ['Kaninen og katten danser!'],
   obj_sandkasse: ['Et nytt sandtårn!'], obj_sandkasse_2: ['Du fant et skjell i sanden!'],
   obj_spilledasetre: ['Treet spiller en sang!', 'Se, hun danser!'], obj_spilledasetre_2: ['Fuglene synger med!'],
   obj_boblefontene: ['Så mange bobler!', 'Bobler, bobler!'], obj_boblefontene_2: ['En kjempeboble! Pop!'],

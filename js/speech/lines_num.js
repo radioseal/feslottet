@@ -162,7 +162,7 @@ F.TPL.addAll({
   num_f05_ok: 'Blobb! Trylledrikken bobler.',
   // F11 Ti-og-litt
   num_f11_q: { text: 'Hvor mange er gjemt under kluten?', voices: [''] },
-  num_f11_ok: 'Tada! Se hva som var under.',
+  num_f11_ok: 'Vips! Se hva som var under.',     // parent 12.10.: «Tada» sounds wrong in every voice – «Vips!»
   // F13 Sparegrisen
   num_f13_har: { text: 'Grisen har {n} mynter.', slots: { n: 'NUM_0_20' } },
   num_f13_har1: { text: 'Grisen har 1 mynt.' },   // singular (review: «1 mynter»)

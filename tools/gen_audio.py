@@ -13,8 +13,25 @@ Every new clip is trimmed with ffmpeg (lead/tail silence + internal pauses cappe
 
     node tools/collect_speech.js && <venv>/bin/python tools/gen_audio.py [--prune] && node tools/collect_speech.js --check
 """
-import asyncio, hashlib, json, os, re, shutil, subprocess, sys, struct, math
-import edge_tts
+import asyncio, hashlib, json, os, re, shutil, subprocess, sys, struct, math, html, urllib.request, urllib.error
+from concurrent.futures import ThreadPoolExecutor
+# 12.10. backend: Azure AI Speech (licensed for use in applications) – the same nb-NO voices as edge-tts. The key comes from
+# AZURE_SPEECH_KEY / AZURE_SPEECH_REGION or ~/.config/feslottet/azure.env (never committed). --edge uses the old edge-tts route
+# (personal use only: those clips may not be redistributed).
+EDGE = '--edge' in sys.argv
+if EDGE: import edge_tts
+def _azure_env():
+    k, r = os.environ.get('AZURE_SPEECH_KEY'), os.environ.get('AZURE_SPEECH_REGION')
+    p = os.path.expanduser('~/.config/feslottet/azure.env')
+    if (not k or not r) and os.path.exists(p):
+        kv = dict(l.strip().split('=', 1) for l in open(p) if '=' in l)
+        k, r = k or kv.get('AZURE_SPEECH_KEY'), r or kv.get('AZURE_SPEECH_REGION')
+    return k, r
+AZ_KEY, AZ_REGION = (None, None) if EDGE else _azure_env()
+if not EDGE and not (AZ_KEY and AZ_REGION): sys.exit('No Azure key: set AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (or use --edge for personal use)')
+BACKEND = 'edge' if EDGE else 'az1'
+# parent 12.10.: Iselin says single words and short exclamations better (Hurra, sau); Pernille stays for sentences
+SHORT_VOICE = 'nb-NO-IselinNeural'
 
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); AUD = os.path.join(ROOT, 'audio')
 FF = '/opt/homebrew/bin/ffmpeg' if os.path.exists('/opt/homebrew/bin/ffmpeg') else (shutil.which('ffmpeg') or 'ffmpeg')
@@ -45,18 +62,22 @@ def tts_text(t):
     return t.strip()
 
 def key(v, t): return (v + '|' + t) if v else t
-def spec(v): return VOICES.get(v, VOICES[''])
+def nwords(t): return len(re.sub(r'[^\wæøåÆØÅ\s-]', ' ', t).split())
+def spec(v, t=None):
+    s = VOICES.get(v, VOICES[''])
+    if not EDGE and v == '' and t is not None and 0 < nwords(t) <= 3: s = dict(s, voice=SHORT_VOICE)
+    return s
 def prosody(v, t):
-    s = spec(v); rate, pitch = s['rate'], s['pitch']
-    if v == '' and re.fullmatch(r'[A-ZÆØÅa-zæøå]+[.!?]?', t): rate = '-18%'   # single words: slower and clear
+    s = spec(v, t); rate, pitch = s['rate'], s['pitch']
+    if EDGE and v == '' and re.fullmatch(r'[A-ZÆØÅa-zæøå]+[.!?]?', t): rate = '-18%'   # single words: slower and clear
     return rate, pitch
 def needs_carrier(v, t):
-    if 'Multilingual' not in spec(v)['voice']: return False
+    if not EDGE or 'Multilingual' not in spec(v)['voice']: return False
     words = re.sub(r'[^\wæøåÆØÅ\s-]', ' ', t).split()
     return 0 < len(words) <= 4
 def fname(v, t):
-    s = spec(v); rate, pitch = prosody(v, t)
-    tag = s['voice'] + '|' + rate + '|' + pitch + ('|' + CARRIER_VER if needs_carrier(v, t) else '') + ('|' + respell(t) if respell(t) != t else '')
+    s = spec(v, t); rate, pitch = prosody(v, t)
+    tag = ('' if EDGE else BACKEND + '|') + s['voice'] + '|' + rate + '|' + pitch + ('|' + CARRIER_VER if needs_carrier(v, t) else '') + ('|' + respell(t) if respell(t) != t else '')
     return 'audio/' + hashlib.sha1((tag + '|' + key(v, t)).encode()).hexdigest()[:14] + '.mp3'
 
 def trim(path):
@@ -125,6 +146,17 @@ async def synth_multi(v, t, out):
     if r.returncode != 0: raise RuntimeError('concat failed')
     os.replace(cat, out)
 
+_POOL = ThreadPoolExecutor(16)
+def azure_synth(voice, text, rate, pitch, out):
+    ssml = ("<speak version='1.0' xml:lang='nb-NO'><voice name='%s'><prosody rate='%s' pitch='%s'>%s</prosody></voice></speak>"
+            % (voice, rate, pitch, html.escape(text, quote=False)))
+    req = urllib.request.Request('https://%s.tts.speech.microsoft.com/cognitiveservices/v1' % AZ_REGION, data=ssml.encode('utf-8'),
+                                 headers={'Ocp-Apim-Subscription-Key': AZ_KEY, 'Content-Type': 'application/ssml+xml',
+                                          'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3', 'User-Agent': 'feslottet-gen-audio'})
+    with urllib.request.urlopen(req, timeout=60) as r: data = r.read()
+    if len(data) < 300: raise RuntimeError('empty audio')
+    open(out + '.tmp', 'wb').write(data); os.replace(out + '.tmp', out)
+
 async def one(v, t, sem):
     out = os.path.join(ROOT, fname(v, t))
     if os.path.exists(out) and os.path.getsize(out) > 300: return
@@ -132,7 +164,9 @@ async def one(v, t, sem):
     async with sem:
         for attempt in range(5):
             try:
-                if needs_carrier(v, t): await synth_multi(v, t, out)
+                if not EDGE:
+                    await asyncio.get_event_loop().run_in_executor(_POOL, azure_synth, spec(v, t)['voice'], tts_text(t), rate, pitch, out)
+                elif needs_carrier(v, t): await synth_multi(v, t, out)
                 else:
                     await edge_tts.Communicate(tts_text(t), spec(v)['voice'], rate=rate, pitch=pitch).save(out + '.tmp')
                     os.replace(out + '.tmp', out)
@@ -148,7 +182,7 @@ async def main():
     SP = os.path.join(HERE, 'static_audio.json'); STATIC = json.load(open(SP)) if os.path.exists(SP) else {}
     sents = [s for s in sents if s[1] not in STATIC]          # recorded letter sounds etc. are never TTS
     os.makedirs(AUD, exist_ok=True)
-    sem = asyncio.Semaphore(12); done = 0
+    sem = asyncio.Semaphore(16); done = 0
     tasks = [one(v, t, sem) for v, t in sents]
     for f in asyncio.as_completed(tasks):
         await f; done += 1
